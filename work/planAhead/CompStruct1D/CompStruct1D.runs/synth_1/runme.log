@@ -1,0 +1,538 @@
+
+*** Running xst
+    with args -ifn "mojo_top_0.xst" -ofn "mojo_top_0.srp" -intstyle ise
+
+Reading design: mojo_top_0.prj
+
+=========================================================================
+*                          HDL Parsing                                  *
+=========================================================================
+Analyzing Verilog file "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/alu_shift16_44.v" into library work
+Parsing module <alu_shift16_44>.
+Analyzing Verilog file "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/alu_comp16_42.v" into library work
+Parsing module <alu_comp16_42>.
+Analyzing Verilog file "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/alu_bool16_43.v" into library work
+Parsing module <alu_bool16_43>.
+Analyzing Verilog file "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/alu_add16_41.v" into library work
+Parsing module <alu_add16_41>.
+Analyzing Verilog file "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/pipeline_27.v" into library work
+Parsing module <pipeline_27>.
+Analyzing Verilog file "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/gamelogicv4_40.v" into library work
+Parsing module <gamelogicv4_40>.
+Analyzing Verilog file "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/alu_39.v" into library work
+Parsing module <alu_39>.
+Analyzing Verilog file "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/roundmanager_26.v" into library work
+Parsing module <roundmanager_26>.
+Analyzing Verilog file "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/reset_conditioner_25.v" into library work
+Parsing module <reset_conditioner_25>.
+Analyzing Verilog file "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/edge_detector_1.v" into library work
+Parsing module <edge_detector_1>.
+Analyzing Verilog file "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/button_conditioner_13.v" into library work
+Parsing module <button_conditioner_13>.
+Analyzing Verilog file "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/mojo_top_0.v" into library work
+Parsing module <mojo_top_0>.
+
+=========================================================================
+*                            HDL Elaboration                            *
+=========================================================================
+
+Elaborating module <mojo_top_0>.
+
+Elaborating module <edge_detector_1>.
+
+Elaborating module <button_conditioner_13>.
+
+Elaborating module <pipeline_27>.
+
+Elaborating module <reset_conditioner_25>.
+
+Elaborating module <roundmanager_26>.
+
+Elaborating module <alu_39>.
+
+Elaborating module <alu_add16_41>.
+
+Elaborating module <alu_comp16_42>.
+
+Elaborating module <alu_bool16_43>.
+
+Elaborating module <alu_shift16_44>.
+WARNING:HDLCompiler:1127 - "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/roundmanager_26.v" Line 36: Assignment to M_alu_z ignored, since the identifier is never used
+WARNING:HDLCompiler:1127 - "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/roundmanager_26.v" Line 37: Assignment to M_alu_v ignored, since the identifier is never used
+WARNING:HDLCompiler:1127 - "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/roundmanager_26.v" Line 38: Assignment to M_alu_n ignored, since the identifier is never used
+
+Elaborating module <gamelogicv4_40>.
+
+=========================================================================
+*                           HDL Synthesis                               *
+=========================================================================
+
+Synthesizing Unit <mojo_top_0>.
+    Related source file is "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/mojo_top_0.v".
+WARNING:Xst:647 - Input <io_button> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <io_dip> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <cclk> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <spi_ss> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <spi_mosi> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <spi_sck> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <avr_tx> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <avr_rx_busy> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+    Found 1-bit tristate buffer for signal <spi_miso> created at line 234
+    Found 1-bit tristate buffer for signal <spi_channel<3>> created at line 234
+    Found 1-bit tristate buffer for signal <spi_channel<2>> created at line 234
+    Found 1-bit tristate buffer for signal <spi_channel<1>> created at line 234
+    Found 1-bit tristate buffer for signal <spi_channel<0>> created at line 234
+    Found 1-bit tristate buffer for signal <avr_rx> created at line 234
+    Summary:
+	inferred   6 Tristate(s).
+Unit <mojo_top_0> synthesized.
+
+Synthesizing Unit <edge_detector_1>.
+    Related source file is "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/edge_detector_1.v".
+    Found 1-bit register for signal <M_last_q>.
+    Summary:
+	inferred   1 D-type flip-flop(s).
+Unit <edge_detector_1> synthesized.
+
+Synthesizing Unit <button_conditioner_13>.
+    Related source file is "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/button_conditioner_13.v".
+    Found 20-bit register for signal <M_ctr_q>.
+    Found 20-bit adder for signal <M_ctr_q[19]_GND_3_o_add_2_OUT> created at line 39.
+    Summary:
+	inferred   1 Adder/Subtractor(s).
+	inferred  20 D-type flip-flop(s).
+Unit <button_conditioner_13> synthesized.
+
+Synthesizing Unit <pipeline_27>.
+    Related source file is "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/pipeline_27.v".
+    Found 2-bit register for signal <M_pipe_q>.
+    Summary:
+	inferred   2 D-type flip-flop(s).
+Unit <pipeline_27> synthesized.
+
+Synthesizing Unit <reset_conditioner_25>.
+    Related source file is "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/reset_conditioner_25.v".
+    Found 4-bit register for signal <M_stage_q>.
+    Summary:
+	inferred   4 D-type flip-flop(s).
+Unit <reset_conditioner_25> synthesized.
+
+Synthesizing Unit <roundmanager_26>.
+    Related source file is "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/roundmanager_26.v".
+INFO:Xst:3210 - "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/roundmanager_26.v" line 30: Output port <z> of the instance <alu> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/roundmanager_26.v" line 30: Output port <v> of the instance <alu> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/roundmanager_26.v" line 30: Output port <n> of the instance <alu> is unconnected or connected to loadless signal.
+    Found 2-bit register for signal <M_p1score_q>.
+    Found 2-bit register for signal <M_p2score_q>.
+    Found 2-bit register for signal <M_winner_q>.
+    Found 1-bit register for signal <M_p1ready_q>.
+    Found 1-bit register for signal <M_p2ready_q>.
+    Found 32-bit register for signal <M_clock_q>.
+    Found 4-bit register for signal <M_rounder_q>.
+    Found 3-bit register for signal <M_roundno_q>.
+    Found finite state machine <FSM_0> for signal <M_rounder_q>.
+    -----------------------------------------------------------------------
+    | States             | 14                                             |
+    | Transitions        | 71                                             |
+    | Inputs             | 18                                             |
+    | Outputs            | 15                                             |
+    | Clock              | clk (rising_edge)                              |
+    | Reset              | rst (positive)                                 |
+    | Reset type         | synchronous                                    |
+    | Reset State        | 0000                                           |
+    | Power Up State     | 0000                                           |
+    | Encoding           | auto                                           |
+    | Implementation     | LUT                                            |
+    -----------------------------------------------------------------------
+    Found 32-bit adder for signal <M_clock_q[31]_GND_6_o_add_0_OUT> created at line 103.
+    Found 3-bit adder for signal <M_roundno_q[2]_GND_6_o_add_208_OUT> created at line 438.
+    Found 4x3-bit Read Only RAM for signal <M_p1score_q[1]_PWR_6_o_wide_mux_3_OUT>
+    Found 4x3-bit Read Only RAM for signal <M_p2score_q[1]_PWR_6_o_wide_mux_4_OUT>
+    Found 4x16-bit Read Only RAM for signal <GND_6_o_GND_6_o_mux_215_OUT>
+    Found 32-bit 15-to-1 multiplexer for signal <M_clock_d> created at line 143.
+    Found 16-bit 4-to-1 multiplexer for signal <GND_6_o_GND_6_o_mux_214_OUT> created at line 436.
+    Found 32-bit comparator greater for signal <n0011> created at line 162
+    Found 32-bit comparator lessequal for signal <n0013> created at line 165
+    Found 32-bit comparator greater for signal <n0016> created at line 169
+    Found 32-bit comparator lessequal for signal <n0018> created at line 172
+    Found 32-bit comparator greater for signal <n0021> created at line 176
+    Found 32-bit comparator lessequal for signal <n0023> created at line 179
+    Found 32-bit comparator greater for signal <n0123> created at line 389
+    Found 32-bit comparator greater for signal <n0125> created at line 392
+    Found 32-bit comparator greater for signal <n0127> created at line 395
+    Found 32-bit comparator greater for signal <n0129> created at line 398
+    Found 32-bit comparator greater for signal <n0131> created at line 401
+    Found 32-bit comparator greater for signal <n0133> created at line 404
+    Summary:
+	inferred   3 RAM(s).
+	inferred   2 Adder/Subtractor(s).
+	inferred  43 D-type flip-flop(s).
+	inferred  12 Comparator(s).
+	inferred 114 Multiplexer(s).
+	inferred   1 Finite State Machine(s).
+Unit <roundmanager_26> synthesized.
+
+Synthesizing Unit <alu_39>.
+    Related source file is "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/alu_39.v".
+    Found 16-bit 4-to-1 multiplexer for signal <alu> created at line 90.
+    Summary:
+	inferred   1 Multiplexer(s).
+Unit <alu_39> synthesized.
+
+Synthesizing Unit <alu_add16_41>.
+    Related source file is "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/alu_add16_41.v".
+WARNING:Xst:647 - Input <alufn<5:2>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+    Found 16-bit adder for signal <n0031> created at line 32.
+    Found 16-bit adder for signal <a[15]_GND_8_o_add_4_OUT> created at line 32.
+    Found 16x16-bit multiplier for signal <n0022> created at line 29.
+    Summary:
+	inferred   1 Multiplier(s).
+	inferred   2 Adder/Subtractor(s).
+	inferred   4 Multiplexer(s).
+Unit <alu_add16_41> synthesized.
+
+Synthesizing Unit <alu_comp16_42>.
+    Related source file is "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/alu_comp16_42.v".
+WARNING:Xst:647 - Input <alufn<0:0>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <alufn<5:3>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+    Found 16-bit 4-to-1 multiplexer for signal <compare> created at line 20.
+    Summary:
+	inferred   1 Multiplexer(s).
+Unit <alu_comp16_42> synthesized.
+
+Synthesizing Unit <alu_bool16_43>.
+    Related source file is "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/alu_bool16_43.v".
+WARNING:Xst:647 - Input <alufn<5:4>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+    Summary:
+Unit <alu_bool16_43> synthesized.
+
+Synthesizing Unit <alu_shift16_44>.
+    Related source file is "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/alu_shift16_44.v".
+WARNING:Xst:647 - Input <alufn<5:3>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+    Found 5-bit subtractor for signal <PWR_11_o_GND_12_o_sub_12_OUT> created at line 33.
+    Found 16-bit shifter logical left for signal <a[15]_PWR_11_o_shift_left_4_OUT> created at line 27
+    Found 16-bit shifter logical left for signal <a[15]_b[3]_shift_left_6_OUT> created at line 30
+    Found 16-bit shifter logical right for signal <a[15]_PWR_11_o_shift_right_8_OUT> created at line 30
+    Found 16-bit shifter logical right for signal <a[15]_b[3]_shift_right_10_OUT> created at line 33
+    Found 16-bit shifter logical left for signal <a[15]_PWR_11_o_shift_left_12_OUT> created at line 33
+    Found 16-bit 7-to-1 multiplexer for signal <shift> created at line 19.
+    Summary:
+	inferred   1 Adder/Subtractor(s).
+	inferred   4 Multiplexer(s).
+	inferred   5 Combinational logic shifter(s).
+Unit <alu_shift16_44> synthesized.
+
+Synthesizing Unit <gamelogicv4_40>.
+    Related source file is "C:/Users/User/Documents/mojo/CompStruct1D/work/planAhead/CompStruct1D/CompStruct1D.srcs/sources_1/imports/verilog/gamelogicv4_40.v".
+    Found 4-bit register for signal <M_p2_q>.
+    Found 4-bit register for signal <M_p1_q>.
+    Found finite state machine <FSM_1> for signal <M_p2_q>.
+    -----------------------------------------------------------------------
+    | States             | 12                                             |
+    | Transitions        | 133                                            |
+    | Inputs             | 21                                             |
+    | Outputs            | 7                                              |
+    | Clock              | clk (rising_edge)                              |
+    | Reset              | rst (positive)                                 |
+    | Reset type         | synchronous                                    |
+    | Reset State        | 0000                                           |
+    | Power Up State     | 0000                                           |
+    | Encoding           | auto                                           |
+    | Implementation     | LUT                                            |
+    -----------------------------------------------------------------------
+    Found finite state machine <FSM_2> for signal <M_p1_q>.
+    -----------------------------------------------------------------------
+    | States             | 12                                             |
+    | Transitions        | 133                                            |
+    | Inputs             | 21                                             |
+    | Outputs            | 6                                              |
+    | Clock              | clk (rising_edge)                              |
+    | Reset              | rst (positive)                                 |
+    | Reset type         | synchronous                                    |
+    | Reset State        | 0000                                           |
+    | Power Up State     | 0000                                           |
+    | Encoding           | auto                                           |
+    | Implementation     | LUT                                            |
+    -----------------------------------------------------------------------
+    Summary:
+	inferred   5 Multiplexer(s).
+	inferred   2 Finite State Machine(s).
+Unit <gamelogicv4_40> synthesized.
+
+=========================================================================
+HDL Synthesis Report
+
+Macro Statistics
+# RAMs                                                 : 3
+ 4x16-bit single-port Read Only RAM                    : 1
+ 4x3-bit single-port Read Only RAM                     : 2
+# Multipliers                                          : 1
+ 16x16-bit multiplier                                  : 1
+# Adders/Subtractors                                   : 17
+ 16-bit adder                                          : 2
+ 20-bit adder                                          : 12
+ 3-bit adder                                           : 1
+ 32-bit adder                                          : 1
+ 5-bit subtractor                                      : 1
+# Registers                                            : 44
+ 1-bit register                                        : 14
+ 2-bit register                                        : 15
+ 20-bit register                                       : 12
+ 3-bit register                                        : 1
+ 32-bit register                                       : 1
+ 4-bit register                                        : 1
+# Comparators                                          : 12
+ 32-bit comparator greater                             : 9
+ 32-bit comparator lessequal                           : 3
+# Multiplexers                                         : 129
+ 1-bit 2-to-1 multiplexer                              : 6
+ 16-bit 2-to-1 multiplexer                             : 14
+ 16-bit 4-to-1 multiplexer                             : 3
+ 16-bit 7-to-1 multiplexer                             : 1
+ 2-bit 2-to-1 multiplexer                              : 6
+ 3-bit 2-to-1 multiplexer                              : 11
+ 32-bit 15-to-1 multiplexer                            : 1
+ 32-bit 2-to-1 multiplexer                             : 38
+ 5-bit 2-to-1 multiplexer                              : 46
+ 6-bit 2-to-1 multiplexer                              : 3
+# Logic shifters                                       : 5
+ 16-bit shifter logical left                           : 3
+ 16-bit shifter logical right                          : 2
+# Tristates                                            : 6
+ 1-bit tristate buffer                                 : 6
+# FSMs                                                 : 3
+# Xors                                                 : 3
+ 1-bit xor2                                            : 1
+ 16-bit xor2                                           : 2
+
+=========================================================================
+
+=========================================================================
+*                       Advanced HDL Synthesis                          *
+=========================================================================
+
+
+Synthesizing (advanced) Unit <button_conditioner_13>.
+The following registers are absorbed into counter <M_ctr_q>: 1 register on signal <M_ctr_q>.
+Unit <button_conditioner_13> synthesized (advanced).
+
+Synthesizing (advanced) Unit <roundmanager_26>.
+The following registers are absorbed into counter <M_roundno_q>: 1 register on signal <M_roundno_q>.
+INFO:Xst:3212 - HDL ADVISOR - Asynchronous or synchronous initialization of the register <M_p1score_q> prevents it from being combined with the RAM <Mram_M_p1score_q[1]_PWR_6_o_wide_mux_3_OUT> for implementation as read-only block RAM.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 4-word x 3-bit                      |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <M_p1score_q>   |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to internal node          |          |
+    -----------------------------------------------------------------------
+INFO:Xst:3212 - HDL ADVISOR - Asynchronous or synchronous initialization of the register <M_winner_q> prevents it from being combined with the RAM <Mram_GND_6_o_GND_6_o_mux_215_OUT> for implementation as read-only block RAM.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 4-word x 16-bit                     |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <M_winner_q>    |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to internal node          |          |
+    -----------------------------------------------------------------------
+INFO:Xst:3212 - HDL ADVISOR - Asynchronous or synchronous initialization of the register <M_p2score_q> prevents it from being combined with the RAM <Mram_M_p2score_q[1]_PWR_6_o_wide_mux_4_OUT> for implementation as read-only block RAM.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 4-word x 3-bit                      |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <M_p2score_q>   |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to internal node          |          |
+    -----------------------------------------------------------------------
+Unit <roundmanager_26> synthesized (advanced).
+
+=========================================================================
+Advanced HDL Synthesis Report
+
+Macro Statistics
+# RAMs                                                 : 3
+ 4x16-bit single-port distributed Read Only RAM        : 1
+ 4x3-bit single-port distributed Read Only RAM         : 2
+# Multipliers                                          : 1
+ 16x16-bit multiplier                                  : 1
+# Adders/Subtractors                                   : 3
+ 16-bit adder carry in                                 : 1
+ 32-bit adder                                          : 1
+ 5-bit subtractor                                      : 1
+# Counters                                             : 13
+ 20-bit up counter                                     : 12
+ 3-bit up counter                                      : 1
+# Registers                                            : 80
+ Flip-Flops                                            : 80
+# Comparators                                          : 12
+ 32-bit comparator greater                             : 9
+ 32-bit comparator lessequal                           : 3
+# Multiplexers                                         : 128
+ 1-bit 2-to-1 multiplexer                              : 6
+ 16-bit 2-to-1 multiplexer                             : 14
+ 16-bit 4-to-1 multiplexer                             : 3
+ 16-bit 7-to-1 multiplexer                             : 1
+ 2-bit 2-to-1 multiplexer                              : 6
+ 3-bit 2-to-1 multiplexer                              : 10
+ 32-bit 15-to-1 multiplexer                            : 1
+ 32-bit 2-to-1 multiplexer                             : 38
+ 5-bit 2-to-1 multiplexer                              : 46
+ 6-bit 2-to-1 multiplexer                              : 3
+# Logic shifters                                       : 5
+ 16-bit shifter logical left                           : 3
+ 16-bit shifter logical right                          : 2
+# FSMs                                                 : 3
+# Xors                                                 : 3
+ 1-bit xor2                                            : 1
+ 16-bit xor2                                           : 2
+
+=========================================================================
+
+=========================================================================
+*                         Low Level Synthesis                           *
+=========================================================================
+Analyzing FSM <MFsm> for best encoding.
+Optimizing FSM <roundmanager/FSM_0> on signal <M_rounder_q[1:4]> with user encoding.
+-------------------
+ State | Encoding
+-------------------
+ 0000  | 0000
+ 0001  | 0001
+ 0010  | 0010
+ 0100  | 0100
+ 0110  | 0110
+ 1000  | 1000
+ 1010  | 1010
+ 1101  | 1101
+ 0011  | 0011
+ 1100  | 1100
+ 0101  | 0101
+ 0111  | 0111
+ 1001  | 1001
+ 1011  | 1011
+-------------------
+Analyzing FSM <MFsm> for best encoding.
+Optimizing FSM <roundmanager/glv4/FSM_1> on signal <M_p2_q[1:4]> with sequential encoding.
+-------------------
+ State | Encoding
+-------------------
+ 0000  | 0000
+ 1011  | 0001
+ 0001  | 0010
+ 0010  | 0011
+ 0011  | 0100
+ 0100  | 0101
+ 0101  | 0110
+ 0110  | 0111
+ 1010  | 1000
+ 0111  | 1001
+ 1000  | 1010
+ 1001  | 1011
+-------------------
+Analyzing FSM <MFsm> for best encoding.
+Optimizing FSM <roundmanager/glv4/FSM_2> on signal <M_p1_q[1:12]> with one-hot encoding.
+-----------------------
+ State | Encoding
+-----------------------
+ 0000  | 000000000001
+ 1011  | 000000000010
+ 0001  | 000000000100
+ 0010  | 000000001000
+ 0011  | 000000010000
+ 0100  | 000000100000
+ 0101  | 000001000000
+ 0110  | 000010000000
+ 1010  | 000100000000
+ 0111  | 001000000000
+ 1000  | 010000000000
+ 1001  | 100000000000
+-----------------------
+
+Optimizing unit <mojo_top_0> ...
+
+Optimizing unit <roundmanager_26> ...
+
+Optimizing unit <gamelogicv4_40> ...
+
+Optimizing unit <alu_add16_41> ...
+
+Optimizing unit <alu_shift16_44> ...
+WARNING:Xst:2677 - Node <roundmanager/alu/add/Mmult_n0022> of sequential type is unconnected in block <mojo_top_0>.
+
+Mapping all equations...
+Building and optimizing final netlist ...
+Found area constraint ratio of 100 (+ 0) on block mojo_top_0, actual ratio is 15.
+
+Final Macro Processing ...
+
+Processing Unit <mojo_top_0> :
+	Found 2-bit shift register for signal <button_cond_1/sync/M_pipe_q_1>.
+	Found 2-bit shift register for signal <button_cond_2/sync/M_pipe_q_1>.
+	Found 2-bit shift register for signal <button_cond_3/sync/M_pipe_q_1>.
+	Found 2-bit shift register for signal <button_cond_4/sync/M_pipe_q_1>.
+	Found 2-bit shift register for signal <button_cond_5/sync/M_pipe_q_1>.
+	Found 2-bit shift register for signal <button_cond_6/sync/M_pipe_q_1>.
+	Found 2-bit shift register for signal <button_cond_7/sync/M_pipe_q_1>.
+	Found 2-bit shift register for signal <button_cond_8/sync/M_pipe_q_1>.
+	Found 2-bit shift register for signal <button_cond_9/sync/M_pipe_q_1>.
+	Found 2-bit shift register for signal <button_cond_10/sync/M_pipe_q_1>.
+	Found 2-bit shift register for signal <button_cond_11/sync/M_pipe_q_1>.
+	Found 2-bit shift register for signal <button_cond_12/sync/M_pipe_q_1>.
+INFO:Xst:741 - HDL ADVISOR - A 4-bit shift register was found for signal <reset_cond/M_stage_q_3> and currently occupies 4 logic cells (2 slices). Removing the set/reset logic would take advantage of SRL32 (and derived) primitives and reduce this to 1 logic cells (1 slices). Evaluate if the set/reset can be removed for this simple shift register. The majority of simple pipeline structures do not need to be set/reset operationally.
+Unit <mojo_top_0> processed.
+
+=========================================================================
+Final Register Report
+
+Macro Statistics
+# Registers                                            : 319
+ Flip-Flops                                            : 319
+# Shift Registers                                      : 12
+ 2-bit shift register                                  : 12
+
+=========================================================================
+
+=========================================================================
+*                           Partition Report                            *
+=========================================================================
+
+Partition Implementation Status
+-------------------------------
+
+  No Partitions were found in this design.
+
+-------------------------------
+
+=========================================================================
+*                            Design Summary                             *
+=========================================================================
+
+Clock Information:
+------------------
+-----------------------------------+------------------------+-------+
+Clock Signal                       | Clock buffer(FF name)  | Load  |
+-----------------------------------+------------------------+-------+
+clk                                | BUFGP                  | 343   |
+-----------------------------------+------------------------+-------+
+
+Asynchronous Control Signals Information:
+----------------------------------------
+No asynchronous control signals found in this design
+
+Timing Summary:
+---------------
+Speed Grade: -2
+
+   Minimum period: 12.036ns (Maximum Frequency: 83.081MHz)
+   Minimum input arrival time before clock: 3.526ns
+   Maximum output required time after clock: 12.101ns
+   Maximum combinational path delay: No path found
+
+=========================================================================
