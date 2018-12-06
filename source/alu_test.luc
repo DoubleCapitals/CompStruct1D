@@ -1,0 +1,878 @@
+module alu_test (
+    input clk,
+    input rst,
+    input ok_button,
+    input switches[16],
+    input alufn[6],
+    input spoiler,
+    input autotoggle,
+    output indicator[16],
+    output statecheck[5]
+  ) {
+
+  alu alu; // import the ALU module
+  
+  .clk(clk), .rst(rst) {
+    dff clock[27]; // clock to cycle between display of a, b and ALU result
+    dff tempa[16]; // temporarily stores a and b to input into ALU; this is done because also want to display the inputs being fed
+    dff tempb[16];
+    fsm tester = {IDLE, INPUTA, INPUTB, RESULT}; // FSM for manual tester
+    fsm autocycle = {ADDONE, ADDTWO, ADDTHREE, ADDFOUR, SUBONE, SUBTWO, SUBTHREE, SUBFOUR,
+    MULONE, MULTWO, MULTHREE, MULFOUR, AND, OR, XOR, A, SHL, SHR, SRAONE, SRATWO, RL, RR,
+    CMPEQONE, CMPEQTWO, CMPEQTHREE, CMPLTONE, CMPLTTWO, CMPLTTHREE, CMPLEONE, CMPLETWO, CMPLETHREE,
+    ADDERR, BOOLERR, SHIFTERR, COMPERR}; // FSM for automatic tester
+  }
+  
+  always {
+  
+    //initialisation    
+    alu.a = 0;
+    alu.b = 0;
+    alu.spoiler = spoiler;
+    alu.alufn = 0;
+    indicator = 0;
+    statecheck = 0;
+    clock.d = clock.q + 1; // Makes the clock dff count up with each cycle
+
+    
+    //Using a switch, we toggle between automatic testing and manual testing    
+    if (autotoggle) {
+    
+      //The indicator lights will periodically cycle between A, B and the ALU result
+      //We set the result to be displayed for double the time of that of A and B
+      
+      case (clock.q[26:25]) {
+      
+        b00:
+        
+          indicator = tempa.q;
+        
+        b01:
+        
+          indicator = tempb.q;
+          
+        default:
+        
+          indicator = alu.alu;
+        }
+      
+      case (autocycle.q) {              // for each test case:
+      
+        autocycle.ADDONE:
+
+          alu.alufn = 6b000000;         // feed the ALUFN, A and B inputs (also fed into tempa and tempb for display purposes)
+          tempa.d = 16h7fff;
+          tempb.d = 16h8003;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b00001;
+          
+          if (ok_button) {              // when the OK button is pressed, check if the output is as expected
+          
+            if (alu.alu == 16h0002) {  // 32767 + (-32765) = 2 (operation overflows)
+              clock.d = 26x{0}; 
+              autocycle.d = autocycle.ADDTWO; // if output is correct, go to the next case
+              
+              } else {
+            
+              autocycle.d = autocycle.ADDERR; // if output is incorrect, go to appropriate error state
+              // 1st set of 4 lights: Adder error
+              // 2nd set of 4 lights: Boolean error
+              // 3rd set of 4 lights: Shifter error
+              // 4th set of 4 lights: Comparator error
+              
+              
+              }
+            
+            }
+
+        autocycle.ADDTWO:
+        
+          alu.alufn = 6b000000;
+          tempa.d = 16h0002;
+          tempb.d = 16h0002;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b00010;
+                    
+          if (ok_button) {
+          
+            if (alu.alu == 16h0004) {  // 2 + 2 = 4
+              clock.d = 16x{0}; 
+              autocycle.d = autocycle.ADDTHREE;
+              
+              } else {
+            
+              autocycle.d = autocycle.ADDERR;
+              
+              }
+            
+            }
+
+        autocycle.ADDTHREE:
+        
+          alu.alufn = 6b000000;
+          tempa.d = 16hfffe;
+          tempb.d = 16hfff0;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b00011;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16hffee) {  // (-16) + (-2) = -18 (operation overflows)
+              clock.d = 16x{0}; 
+              autocycle.d = autocycle.ADDFOUR;
+              
+              } else {
+            
+              autocycle.d = autocycle.ADDERR;
+              
+              }
+            
+            }
+
+        autocycle.ADDFOUR:
+        
+          alu.alufn = 6b000000;
+          tempa.d = 16h0003;
+          tempb.d = 16hfffb;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b00100;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16hfffe) {  // 3 + (-5) = (-2)
+              clock.d = 16x{0}; 
+              autocycle.d = autocycle.SUBONE;
+              
+              } else {
+            
+              autocycle.d = autocycle.ADDERR;
+              
+              }
+            
+            }  
+
+        autocycle.SUBONE:
+        
+          alu.alufn = 6b000001;
+          tempa.d = 16h000c;
+          tempb.d = 16h0005;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b00101;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h0007) {  // 12 - 5 = 7 (operation overflows)
+              clock.d = 16x{0}; 
+              autocycle.d = autocycle.SUBTWO;
+              
+              } else {
+            
+              autocycle.d = autocycle.ADDERR;
+              
+              }
+            
+            }
+
+        autocycle.SUBTWO:
+        
+          alu.alufn = 6b000001;
+          tempa.d = 16h056d;
+          tempb.d = 16h0cb8;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b00110;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16hf8b5) {  // 1389 - 3256 = -1867
+              clock.d = 16x{0}; 
+              autocycle.d = autocycle.SUBTHREE;
+              
+              } else {
+            
+              autocycle.d = autocycle.ADDERR;
+              
+              }
+            
+            }          
+
+        autocycle.SUBTHREE:
+        
+          alu.alufn = 6b000001;
+          tempa.d = 16h2c53;
+          tempb.d = 16hfc18;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b00111;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h303b) {  // 11347 - (-1000) = 12347
+              clock.d = 16x{0}; 
+              autocycle.d = autocycle.SUBFOUR;
+              
+              } else {
+            
+              autocycle.d = autocycle.ADDERR;
+              
+              }
+            
+            }          
+
+        autocycle.SUBFOUR:
+        
+          alu.alufn = 6b000001;
+          tempa.d = 16hf6c9;
+          tempb.d = 16hdccf;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b01000;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h19fa) {  // -2359 - (-9009) = 6650 (operation overflows)
+              clock.d = 16x{0}; 
+              autocycle.d = autocycle.MULONE;
+              
+              } else {
+            
+              autocycle.d = autocycle.ADDERR;
+              
+              }
+            
+            }                              
+
+        autocycle.MULONE:
+        
+          alu.alufn = 6b000010;
+          tempa.d = 16h0005;
+          tempb.d = 16h0017;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b01001;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h0073) {  // 5 * 23 = 115
+              clock.d = 16x{0};
+              autocycle.d = autocycle.MULTWO;
+              
+              } else {
+            
+              autocycle.d = autocycle.ADDERR;
+              
+              }
+            
+            }          
+
+        autocycle.MULTWO:
+        
+          alu.alufn = 6b000010;
+          tempa.d = 16h0c75;
+          tempb.d = 16h1727;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b01010;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h68d3) {  // 3189 * 5927 = 26835 (operation overflows)
+              clock.d = 16x{0};
+              autocycle.d = autocycle.MULTHREE;
+              
+              } else {
+            
+              autocycle.d = autocycle.ADDERR;
+              
+              }
+            
+            }          
+
+        autocycle.MULTHREE:
+        
+          alu.alufn = 6b000010;
+          tempa.d = 16h003f;
+          tempb.d = 16hffe3;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b01011;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16hf8dd) {  // 63 * (-29) = -1827
+              clock.d = 16x{0};
+              autocycle.d = autocycle.MULFOUR;
+              
+              } else {
+            
+              autocycle.d = autocycle.ADDERR;
+              
+              }
+            
+            }          
+
+        autocycle.MULFOUR:
+        
+          alu.alufn = 6b000010;
+          tempa.d = 16hfffe;
+          tempb.d = 16hfffe;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b01100;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h0004) {  // -2 * (-2) = 4
+              clock.d = 16x{0};
+              autocycle.d = autocycle.AND;
+              
+              } else {
+            
+              autocycle.d = autocycle.ADDERR;
+              
+              }
+            
+            }       
+                                                                                
+        autocycle.ADDERR:
+        
+          indicator = 16h000f;
+          
+          autocycle.d = autocycle.ADDERR;           
+
+        autocycle.AND:
+        
+          alu.alufn = 6b011000;
+          tempa.d = 16h00ff;
+          tempb.d = 16h5555;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b01101;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h0055) {  // 0000 0000 1111 1111 & 0101 0101 0101 0101 = 0000 0000 0101 0101
+              clock.d = 16x{0};
+              autocycle.d = autocycle.OR;
+              
+              } else {
+            
+              autocycle.d = autocycle.BOOLERR;
+              
+              }
+        
+            }                             
+
+        autocycle.OR:
+        
+          alu.alufn = 6b011110;
+          tempa.d = 16h00ff;
+          tempb.d = 16h5555;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b01110;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h55ff) {  // 0000 0000 1111 1111 | 0101 0101 0101 0101 = 0101 0101 1111 1111
+              clock.d = 16x{0};
+              autocycle.d = autocycle.XOR;
+              
+              } else {
+            
+              autocycle.d = autocycle.BOOLERR;
+              
+              }
+        
+            }  
+
+        autocycle.XOR:
+        
+          alu.alufn = 6b010110;
+          tempa.d = 16h00ff;
+          tempb.d = 16h5555;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b01111;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h55aa) {  // 0000 0000 1111 1111 ^ 0101 0101 0101 0101 = 0101 0101 1010 1010
+              clock.d = 16x{0};
+              autocycle.d = autocycle.A;
+              
+              } else {
+            
+              autocycle.d = autocycle.BOOLERR;
+              
+              }
+        
+            }          
+
+        autocycle.A:
+        
+          alu.alufn = 6b011010;
+          tempa.d = 16h00ff;
+          tempb.d = 16h5555;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b10000;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h00ff) {  // returns A (0000 0000 1111 1111)
+              clock.d = 16x{0};
+              autocycle.d = autocycle.SHL;
+              
+              } else {
+            
+              autocycle.d = autocycle.BOOLERR;
+              
+              }
+        
+            }          
+
+        autocycle.BOOLERR:
+        
+          indicator = 16h00f0;
+          
+          autocycle.d = autocycle.BOOLERR;
+           
+        autocycle.SHL: 
+         
+          alu.alufn = 6b100000; 
+          tempa.d = 16h0C30; 
+          tempb.d = 16h0002; 
+          alu.a = tempa.q; 
+          alu.b = tempb.q;
+          statecheck = 5b10001; 
+           
+          if (ok_button) { 
+           
+            if (alu.alu == 16h30C0) {  // 0000 1100 0011 0000 <<(2) = 0011 0000 1100 0000 
+              clock.d = 16x{0}; 
+              autocycle.d = autocycle.SHR; 
+               
+              } else { 
+             
+              autocycle.d = autocycle.SHIFTERR; 
+               
+              } 
+         
+            } 
+          
+        autocycle.SHR: 
+         
+          alu.alufn = 6b100001; 
+          tempa.d = 16h0C30; 
+          tempb.d = 16h0002; 
+          alu.a = tempa.q; 
+          alu.b = tempb.q;
+          statecheck = 5b10010; 
+           
+          if (ok_button) { 
+           
+            if (alu.alu == 16h030C) {  // 0000 1100 0011 0000 (2)>> = 0000 0011 0000 1100 
+              clock.d = 16x{0}; 
+              autocycle.d = autocycle.SRAONE; 
+               
+              } else { 
+             
+              autocycle.d = autocycle.SHIFTERR; 
+               
+              } 
+         
+            }  
+                    
+        autocycle.SRAONE: 
+         
+          alu.alufn = 6b100011; 
+          tempa.d = 16h0C30; 
+          tempb.d = 16h0002; 
+          alu.a = tempa.q; 
+          alu.b = tempb.q;
+          statecheck = 5b10011; 
+           
+          if (ok_button) { 
+           
+            if (alu.alu == 16h030C) {  // 0000 1100 0011 0000 (2)>> = 0000 0011 0000 1100 
+              clock.d = 16x{0}; 
+              autocycle.d = autocycle.SRATWO; 
+               
+              } else { 
+             
+              autocycle.d = autocycle.SHIFTERR; 
+               
+              } 
+         
+            } 
+          
+        autocycle.SRATWO: 
+         
+          alu.alufn = 6b100011; 
+          tempa.d = 16h8C31; 
+          tempb.d = 16h0002; 
+          alu.a = tempa.q; 
+          alu.b = tempb.q;
+          statecheck = 5b10100; 
+           
+          if (ok_button) { 
+           
+            if (alu.alu == 16hE30C) {  // 1000 1100 0011 0001 (2)>> = 1110 0011 00001100 
+              clock.d = 16x{0}; 
+              autocycle.d = autocycle.RL; 
+               
+              } else { 
+             
+              autocycle.d = autocycle.SHIFTERR; 
+               
+              } 
+         
+            } 
+            
+        autocycle.RL: 
+         
+          alu.alufn = 6b100100; 
+          tempa.d = 16h8C31; 
+          tempb.d = 16h0002; 
+          alu.a = tempa.q; 
+          alu.b = tempb.q;
+          statecheck = 5b10101; 
+           
+          if (ok_button) { 
+           
+            if (alu.alu == 16h30C6) {  // 1000 1100 0011 0001 <(2) = 0011 0000 1100 0110 
+              clock.d = 16x{0}; 
+              autocycle.d = autocycle.RR; 
+               
+              } else { 
+             
+              autocycle.d = autocycle.SHIFTERR; 
+               
+              } 
+         
+            }
+           
+        autocycle.RR: 
+         
+          alu.alufn = 6b100101; 
+          tempa.d = 16h8C31; 
+          tempb.d = 16h0002; 
+          alu.a = tempa.q; 
+          alu.b = tempb.q;
+          statecheck = 5b10110; 
+           
+          if (ok_button) { 
+           
+            if (alu.alu == 16h630C) {  // 1000 1100 0011 0001 >(2) = 0110 0011 0000 1100 
+              clock.d = 16x{0}; 
+              autocycle.d = autocycle.CMPEQONE; 
+               
+              } else { 
+             
+              autocycle.d = autocycle.SHIFTERR; 
+               
+              } 
+         
+            }                              
+
+        autocycle.SHIFTERR:
+        
+          indicator = 16h0f00;
+          
+          autocycle.d = autocycle.SHIFTERR;          
+
+        autocycle.CMPEQONE:
+        
+          alu.alufn = 6b110011;
+          tempa.d = 16h0002;
+          tempb.d = 16h0002;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b10111;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h0001) {  // 2 = 2
+              clock.d = 16x{0};
+              autocycle.d = autocycle.CMPEQTWO;
+              
+              } else {
+            
+              autocycle.d = autocycle.COMPERR;
+              
+              }
+        
+            } 
+
+        autocycle.CMPEQTWO:
+        
+          alu.alufn = 6b110011;
+          tempa.d = 16h0002;
+          tempb.d = 16h0064;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b11000;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h0000) {  // 2 != 100
+              clock.d = 16x{0};
+              autocycle.d = autocycle.CMPEQTHREE;
+              
+              } else {
+            
+              autocycle.d = autocycle.COMPERR;
+              
+              }
+        
+            }          
+
+        autocycle.CMPEQTHREE:
+        
+          alu.alufn = 6b110011;
+          tempa.d = 16h0002;
+          tempb.d = 16hfffe;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b11001;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h0000) {  // 2 != -2
+              clock.d = 16x{0};
+              autocycle.d = autocycle.CMPLTONE;
+              
+              } else {
+            
+              autocycle.d = autocycle.COMPERR;
+              
+              }
+        
+            }          
+
+        autocycle.CMPLTONE:
+        
+          alu.alufn = 6b110101;
+          tempa.d = 16hff9c;
+          tempb.d = 16h000a;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b11010;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h0001) {  // 10 > -100
+              clock.d = 16x{0};
+              autocycle.d = autocycle.CMPLTTWO;
+              
+              } else {
+            
+              autocycle.d = autocycle.COMPERR;
+              
+              }
+        
+            }          
+
+        autocycle.CMPLTTWO:
+        
+          alu.alufn = 6b110101;
+          tempa.d = 16h000a;
+          tempb.d = 16hff9c;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b11011;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h0000) {  // -100 < 10 (not less than)
+              clock.d = 16x{0};
+              autocycle.d = autocycle.CMPLTTHREE;
+              
+              } else {
+            
+              autocycle.d = autocycle.COMPERR;
+              
+              }
+        
+            }          
+
+        autocycle.CMPLTTHREE:
+        
+          alu.alufn = 6b110101;
+          tempa.d = 16h000a;
+          tempb.d = 16h000a;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b11100;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h0000) {  // 10 = 10 (not less than)
+              clock.d = 16x{0};
+              autocycle.d = autocycle.CMPLEONE;
+              
+              } else {
+            
+              autocycle.d = autocycle.COMPERR;
+              
+              }
+        
+            }          
+
+        autocycle.CMPLEONE:
+        
+          alu.alufn = 6b110111;
+          tempa.d = 16h0004;
+          tempb.d = 16h000a;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b11101;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h0001) {  // 4 <= 10
+              clock.d = 16x{0};
+              autocycle.d = autocycle.CMPLETWO;
+              
+              } else {
+            
+              autocycle.d = autocycle.COMPERR;
+              
+              }
+        
+            }          
+
+        autocycle.CMPLETWO:
+        
+          alu.alufn = 6b110111;
+          tempa.d = 16h0004;
+          tempb.d = 16h0004;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b11110;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h0001) {  // 4 <= 4
+              clock.d = 16x{0};
+              autocycle.d = autocycle.CMPLETHREE;
+              
+              } else {
+            
+              autocycle.d = autocycle.COMPERR;
+              
+              }
+        
+            }          
+
+        autocycle.CMPLETHREE:
+        
+          alu.alufn = 6b110111;
+          tempa.d = 16h000a;
+          tempb.d = 16h0004;
+          alu.a = tempa.q;
+          alu.b = tempb.q;
+          statecheck = 5b11111;
+          
+          if (ok_button) {
+          
+            if (alu.alu == 16h0000) {  // 10 > 4
+              clock.d = 16x{0};
+              autocycle.d = autocycle.ADDONE;
+              
+              } else {
+            
+              autocycle.d = autocycle.COMPERR;
+              
+              }
+        
+            }
+                                                 
+        autocycle.COMPERR:
+        
+          indicator = 16hf000;
+          
+          autocycle.d = autocycle.COMPERR;                    
+                                                                    
+        }
+          
+      } else {
+    
+      //Manual Testing
+    
+      case (tester.q) {
+      
+      //The manual tester begins in the idle state. Press the OK button to input A
+    
+      tester.IDLE:
+        
+        statecheck = 5b00000;
+        
+        if (ok_button) {
+        
+          tester.d = tester.INPUTA;
+          
+          }
+      
+      tester.INPUTA:
+        
+      //Input for A
+      
+        statecheck = 5b00001;
+        indicator = switches;
+        
+        if (ok_button) {
+          
+          //When the OK button is pressed, store the value represented by the input in the switches into tempa
+          //Then the tester waits for the input for B
+        
+          tempa.d = switches;
+          tester.d = tester.INPUTB;
+          
+          }
+      
+      tester.INPUTB:
+        
+      //Input for B
+      
+        statecheck = 5b00010;
+        indicator = switches;
+      
+        if (ok_button) {
+          
+          //When the OK button is pressed, store the value represented by the input in the switches into tempb
+          //Then the tester displays the ALU result
+        
+          tempb.d = switches;
+          tester.d = tester.RESULT;
+          
+          }  
+          
+        
+      tester.RESULT:
+      
+        statecheck = 5b00011;
+        alu.a = tempa.q; // Feed the stored values tempa and tempb, and ALUFN represented by the 6 switches into the ALU
+        alu.b = tempb.q;
+        alu.alufn = alufn;
+        indicator = alu.alu; // The indicator now displays the result
+        
+        if (ok_button) {
+          
+          //When the OK button is pressed, return to the idle state
+        
+          tester.d = tester.IDLE;
+          
+          }
+        
+      }
+      
+      }
+  }
+}

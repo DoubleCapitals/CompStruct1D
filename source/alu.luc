@@ -1,0 +1,73 @@
+module alu (
+    input alufn[6],
+    input a[16],
+    input b[16],
+    input spoiler,
+    output alu[16],
+    output z,
+    output v,
+    output n
+  ) {
+  
+  //import the adder, comparator, boolean and shifter modules
+  alu_add16 add;
+  alu_comp16 comp;
+  alu_bool16 bool;
+  alu_shift16 shift;
+
+  always {
+  
+    //connect inputs of a, b (add, bool, shift) / z, v, n (comp) and ALUFN of each module
+    add.a = a;
+    add.b = b;
+    add.alufn = alufn;
+    
+    comp.z = add.z;
+    comp.v = add.v;
+    comp.n = add.n;
+    comp.alufn = alufn;
+    
+    bool.a = a;
+    bool.b = b;
+    bool.alufn = alufn;
+    
+    shift.a = a;
+    shift.b = b[3:0];
+    shift.alufn = alufn;
+
+    z = add.z;
+    v = add.v;
+    n = add.n;    
+        
+    case (alufn[5:4]) {
+    
+      // Based on ALUFN, select which module to select results from
+      // spoiler is a switch to intentionally force an error for the purposes of testing
+      // When spoiler switch is turned on, all alu results will give incorrect values
+    
+      b00:
+      
+        alu = add.sum + spoiler;
+        //add
+        
+      b01:
+      
+        alu = bool.bool + spoiler;
+        //bool
+        
+      b10:
+      
+        alu = shift.shift + spoiler;
+        
+      b11:
+      
+        alu = comp.compare + spoiler;
+        //comp
+      
+      default:
+        
+        alu = 16h0000;
+        
+      }
+  }
+}

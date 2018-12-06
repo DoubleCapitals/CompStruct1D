@@ -1,0 +1,140 @@
+module mojo_top (
+    input clk,              // 50MHz clock
+    input rst_n,            // reset button (active low)
+    output led [8],         // 8 user controllable LEDs
+    input cclk,             // configuration clock, AVR ready when high
+    output spi_miso,        // AVR SPI MISO
+    input spi_ss,           // AVR SPI Slave Select
+    input spi_mosi,         // AVR SPI MOSI
+    input spi_sck,          // AVR SPI Clock
+    output spi_channel [4], // AVR general purpose pins (used by default to select ADC channel)
+    input avr_tx,           // AVR TX (FPGA RX)
+    output avr_rx,          // AVR RX (FPGA TX)
+    input avr_rx_busy,      // AVR RX buffer full
+    output io_led [3][8],   // LEDs on IO Shield
+    output io_seg [8],      // 7-segment LEDs on IO Shield
+    output io_sel [4],      // Digit select on IO Shield
+    input io_button [5],    // 5 buttons on IO Shield
+    input io_dip [3][8],    // DIP switches on IO Shield
+    input p1enter,          // p1 enter button
+    input p1colours[5],     // p1 coloured buttons
+    input p2enter,          // p2 enter button
+    input p2colours[5],     // p2 coloured buttons
+    output p1indicator[3],  // p1 indicator lights
+    output p2indicator[3],  // p2 indicator lights
+    output roundlights[5]   // central game lights
+  ) {
+  
+  sig rst;                  // reset signal
+  
+  .clk(clk) {
+    // The reset conditioner is used to synchronize the reset signal to the FPGA
+    // clock. This ensures the entire FPGA comes out of reset at the same time.
+    
+    edge_detector edge_detector_1(#RISE(1), #FALL(0)); // detect rising edges
+    edge_detector edge_detector_2(#RISE(1), #FALL(0));
+    edge_detector edge_detector_3(#RISE(1), #FALL(0));
+    edge_detector edge_detector_4(#RISE(1), #FALL(0));
+    edge_detector edge_detector_5(#RISE(1), #FALL(0));
+    edge_detector edge_detector_6(#RISE(1), #FALL(0));
+    
+    edge_detector edge_detector_7(#RISE(1), #FALL(0));
+    
+    edge_detector edge_detector_8(#RISE(1), #FALL(0));
+    edge_detector edge_detector_9(#RISE(1), #FALL(0));
+    edge_detector edge_detector_10(#RISE(1), #FALL(0));
+    edge_detector edge_detector_11(#RISE(1), #FALL(0));
+    edge_detector edge_detector_12(#RISE(1), #FALL(0));
+    
+    button_conditioner button_cond_1;     // button input conditioners
+
+    button_conditioner button_cond_2;
+    button_conditioner button_cond_3;
+    button_conditioner button_cond_4;
+    button_conditioner button_cond_5;
+    button_conditioner button_cond_6;
+    
+    button_conditioner button_cond_7;
+    
+    button_conditioner button_cond_8;
+    button_conditioner button_cond_9;
+    button_conditioner button_cond_10;
+    button_conditioner button_cond_11;
+    button_conditioner button_cond_12;
+    
+    reset_conditioner reset_cond;
+    
+    .rst(rst){roundmanager roundmanager;}
+  }
+  
+  always {
+    reset_cond.in = ~rst_n; // input raw inverted reset signal
+    rst = reset_cond.out;   // conditioned reset
+    
+    led = 8h00;             // turn LEDs off
+    spi_miso = bz;          // not using SPI
+    spi_channel = bzzzz;    // not using flags
+    avr_rx = bz;            // not using serial port
+    
+    io_led = {8h00, 8h00, 8h00};    // turn LEDs off
+    io_seg = 8hff;          // turn segments off
+    io_sel = 4hf;           // select no digits
+
+    
+    button_cond_1.in = p1enter;      // raw button input
+    edge_detector_1.in = ~button_cond_1.out; // input to the edge_detector    
+    roundmanager.p1enter = edge_detector_1.out;
+
+    button_cond_2.in = p1colours[0];      // raw button input
+    edge_detector_2.in = ~button_cond_2.out; // input to the edge_detector    
+    roundmanager.p1colours[0] = edge_detector_2.out;
+    
+    button_cond_3.in = p1colours[1];      // raw button input
+    edge_detector_3.in = ~button_cond_3.out; // input to the edge_detector    
+    roundmanager.p1colours[1] = edge_detector_3.out;    
+
+    button_cond_4.in = p1colours[2];      // raw button input
+    edge_detector_4.in = ~button_cond_4.out; // input to the edge_detector    
+    roundmanager.p1colours[2] = edge_detector_4.out;    
+
+    button_cond_5.in = p1colours[3];      // raw button input
+    edge_detector_5.in = ~button_cond_5.out; // input to the edge_detector    
+    roundmanager.p1colours[3] = edge_detector_5.out;    
+
+    button_cond_6.in = p1colours[4];      // raw button input
+    edge_detector_6.in = ~button_cond_6.out; // input to the edge_detector    
+    roundmanager.p1colours[4] = edge_detector_6.out;    
+
+    button_cond_7.in = p2enter;      // raw button input
+    edge_detector_7.in = ~button_cond_7.out; // input to the edge_detector    
+    roundmanager.p2enter = edge_detector_7.out;    
+
+    button_cond_8.in = p2colours[0];      // raw button input
+    edge_detector_8.in = ~button_cond_8.out; // input to the edge_detector    
+    roundmanager.p2colours[0] = edge_detector_8.out;
+    
+    button_cond_9.in = p2colours[1];      // raw button input
+    edge_detector_9.in = ~button_cond_9.out; // input to the edge_detector    
+    roundmanager.p2colours[1] = edge_detector_9.out;    
+
+    button_cond_10.in = p2colours[2];      // raw button input
+    edge_detector_10.in = ~button_cond_10.out; // input to the edge_detector    
+    roundmanager.p2colours[2] = edge_detector_10.out;    
+
+    button_cond_11.in = p2colours[3];      // raw button input
+    edge_detector_11.in = ~button_cond_11.out; // input to the edge_detector    
+    roundmanager.p2colours[3] = edge_detector_11.out;    
+
+    button_cond_12.in = p2colours[4];      // raw button input
+    edge_detector_12.in = ~button_cond_12.out; // input to the edge_detector    
+    roundmanager.p2colours[4] = edge_detector_12.out;
+    
+    p1indicator = roundmanager.p1indicator; // player 1 indicator lights
+    
+    p2indicator = roundmanager.p2indicator; // player 2 indicator lights
+    
+    roundlights = roundmanager.roundlights; // central game lights
+        
+    }
+  
+}

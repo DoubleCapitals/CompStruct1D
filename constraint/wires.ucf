@@ -1,0 +1,27 @@
+NET "p1indicator<0>" LOC = P100 | IOSTANDARD = LVTTL;
+NET "p1indicator<1>" LOC = P102 | IOSTANDARD = LVTTL;
+NET "p1indicator<2>" LOC = P105 | IOSTANDARD = LVTTL;
+
+NET "p2indicator<0>" LOC = P99 | IOSTANDARD = LVTTL;
+NET "p2indicator<1>" LOC = P101 | IOSTANDARD = LVTTL;
+NET "p2indicator<2>" LOC = P104 | IOSTANDARD = LVTTL;
+
+NET "roundlights<0>" LOC = P50 | IOSTANDARD = LVTTL;
+NET "roundlights<1>" LOC = P40 | IOSTANDARD = LVTTL;
+NET "roundlights<2>" LOC = P34 | IOSTANDARD = LVTTL;
+NET "roundlights<3>" LOC = P32 | IOSTANDARD = LVTTL;
+NET "roundlights<4>" LOC = P29 | IOSTANDARD = LVTTL;
+
+NET "p1enter" LOC = P12 | IOSTANDARD = LVTTL | PULLUP;
+NET "p1colours<0>" LOC = P10 | IOSTANDARD = LVTTL | PULLUP;
+NET "p1colours<1>" LOC = P8 | IOSTANDARD = LVTTL | PULLUP;
+NET "p1colours<2>" LOC = P6 | IOSTANDARD = LVTTL | PULLUP;
+NET "p1colours<3>" LOC = P2 | IOSTANDARD = LVTTL | PULLUP;
+NET "p1colours<4>" LOC = P144 | IOSTANDARD = LVTTL | PULLUP;
+
+NET "p2enter" LOC = P9 | IOSTANDARD = LVTTL | PULLUP;
+NET "p2colours<0>" LOC = P7 | IOSTANDARD = LVTTL | PULLUP;
+NET "p2colours<1>" LOC = P5 | IOSTANDARD = LVTTL | PULLUP;
+NET "p2colours<2>" LOC = P1 | IOSTANDARD = LVTTL | PULLUP;
+NET "p2colours<3>" LOC = P143 | IOSTANDARD = LVTTL | PULLUP;
+NET "p2colours<4>" LOC = P141 | IOSTANDARD = LVTTL | PULLUP;

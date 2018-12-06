@@ -1,0 +1,789 @@
+module gamelogicv3 ( // Hashing Harmony
+    input clk,  // clock
+    input rst,  // reset
+    input p1colours[5],
+    input p1enter,
+    input p2colours[5],
+    input p2enter,
+    input correctseq[16],
+    output alufeed1[16],
+    output alufeed2[16],
+    output alufn[6],
+    input aluoutput[16],
+    output winner[2],
+    
+    output debug[16]
+  ) {
+  
+  .clk(clk), .rst(rst) {
+  
+    dff p1inputholder[4];
+    dff p2inputholder[4];
+    dff p1seqbuilder[32];
+    dff p2seqbuilder[32];
+    dff p1seq[16];
+    dff p2seq[16];
+    dff p1wrong;
+    dff p2wrong;
+    dff win[2];
+    
+    dff clock[27];
+    
+    }
+  
+  always {
+  
+    debug = 0;
+  
+    clock.d = clock.q + 1;
+  
+    debug = p1inputholder.q;
+    
+    alufn = 6b000000;
+    alufeed1 = 16h0000;
+    alufeed2 = 16h0000;
+    winner = win.q;
+    win.d = 2b00;
+    
+    
+    if (p1colours != 5b00000) {
+    
+      //Check the holder position, and insert in the appropriate position
+      
+      case (p1inputholder.q) {
+      
+        b0000:
+        
+          case (p1colours) {
+          
+            b00001:
+            
+              p1seqbuilder.d[31:29] = b001;
+              
+            b00010:
+            
+              p1seqbuilder.d[31:29] = b010;
+              
+            b00100:
+            
+              p1seqbuilder.d[31:29] = b011;
+              
+            b01000:
+            
+              p1seqbuilder.d[31:29] = b100;   
+              
+            b10000:
+            
+              p1seqbuilder.d[31:29] = b101;   
+              
+            default:
+            
+              p1seqbuilder.d[31:29] = b000;
+                      
+            }
+        
+        b0001:
+        
+          case (p1colours) {
+          
+            b00001:
+            
+              p1seqbuilder.d[28:26] = b001;
+              
+            b00010:
+            
+              p1seqbuilder.d[28:26] = b010;
+              
+            b00100:
+            
+              p1seqbuilder.d[28:26] = b011;
+              
+            b01000:
+            
+              p1seqbuilder.d[28:26] = b100;   
+              
+            b10000:
+            
+              p1seqbuilder.d[28:26] = b101;   
+              
+            default:
+            
+              p1seqbuilder.d[28:26] = b000;
+                      
+            }
+
+        b0010:
+        
+          case (p1colours) {
+          
+            b00001:
+            
+              p1seqbuilder.d[25:23] = b001;
+              
+            b00010:
+            
+              p1seqbuilder.d[25:23] = b010;
+              
+            b00100:
+            
+              p1seqbuilder.d[25:23] = b011;
+              
+            b01000:
+            
+              p1seqbuilder.d[25:23] = b100;   
+              
+            b10000:
+            
+              p1seqbuilder.d[25:23] = b101;   
+              
+            default:
+            
+              p1seqbuilder.d[25:23] = b000;
+                      
+            }
+
+        b0011:
+        
+          case (p1colours) {
+          
+            b00001:
+            
+              p1seqbuilder.d[22:20] = b001;
+              
+            b00010:
+            
+              p1seqbuilder.d[22:20] = b010;
+              
+            b00100:
+            
+              p1seqbuilder.d[22:20] = b011;
+              
+            b01000:
+            
+              p1seqbuilder.d[22:20] = b100;   
+              
+            b10000:
+            
+              p1seqbuilder.d[22:20] = b101;   
+              
+            default:
+            
+              p1seqbuilder.d[22:20] = b000;
+                      
+            }          
+
+        b0100:
+        
+          case (p1colours) {
+          
+            b00001:
+            
+              p1seqbuilder.d[19:17] = b001;
+              
+            b00010:
+            
+              p1seqbuilder.d[19:17] = b010;
+              
+            b00100:
+            
+              p1seqbuilder.d[19:17] = b011;
+              
+            b01000:
+            
+              p1seqbuilder.d[19:17] = b100;   
+              
+            b10000:
+            
+              p1seqbuilder.d[19:17] = b101;   
+              
+            default:
+            
+              p1seqbuilder.d[19:17] = b000;
+                      
+            }          
+
+        b0101:
+        
+          case (p1colours) {
+          
+            b00001:
+            
+              p1seqbuilder.d[16:14] = b001;
+              
+            b00010:
+            
+              p1seqbuilder.d[16:14] = b010;
+              
+            b00100:
+            
+              p1seqbuilder.d[16:14] = b011;
+              
+            b01000:
+            
+              p1seqbuilder.d[16:14] = b100;   
+              
+            b10000:
+            
+              p1seqbuilder.d[16:14] = b101;   
+              
+            default:
+            
+              p1seqbuilder.d[16:14] = b000;
+                      
+            }          
+
+        b0110:
+        
+          case (p1colours) {
+          
+            b00001:
+            
+              p1seqbuilder.d[13:11] = b001;
+              
+            b00010:
+            
+              p1seqbuilder.d[13:11] = b010;
+              
+            b00100:
+            
+              p1seqbuilder.d[13:11] = b011;
+              
+            b01000:
+            
+              p1seqbuilder.d[13:11] = b100;   
+              
+            b10000:
+            
+              p1seqbuilder.d[13:11] = b101;   
+              
+            default:
+            
+              p1seqbuilder.d[13:11] = b000;
+                      
+            }
+          
+        b0111:
+        
+          case (p1colours) {
+          
+            b00001:
+            
+              p1seqbuilder.d[10:8] = b001;
+              
+            b00010:
+            
+              p1seqbuilder.d[10:8] = b010;
+              
+            b00100:
+            
+              p1seqbuilder.d[10:8] = b011;
+              
+            b01000:
+            
+              p1seqbuilder.d[10:8] = b100;   
+              
+            b10000:
+            
+              p1seqbuilder.d[10:8] = b101;   
+              
+            default:
+            
+              p1seqbuilder.d[10:8] = b000;
+                      
+            }                              
+
+        b1000:
+        
+          case (p1colours) {
+          
+            b00001:
+            
+              p1seqbuilder.d[7:5] = b001;
+              
+            b00010:
+            
+              p1seqbuilder.d[7:5] = b010;
+              
+            b00100:
+            
+              p1seqbuilder.d[7:5] = b011;
+              
+            b01000:
+            
+              p1seqbuilder.d[7:5] = b100;   
+              
+            b10000:
+            
+              p1seqbuilder.d[7:5] = b101;   
+              
+            default:
+            
+              p1seqbuilder.d[7:5] = b000;
+                      
+            }          
+
+        b1001:
+        
+          case (p1colours) {
+          
+            b00001:
+            
+              p1seqbuilder.d[4:2] = b001;
+              
+            b00010:
+            
+              p1seqbuilder.d[4:2] = b010;
+              
+            b00100:
+            
+              p1seqbuilder.d[4:2] = b011;
+              
+            b01000:
+            
+              p1seqbuilder.d[4:2] = b100;   
+              
+            b10000:
+            
+              p1seqbuilder.d[4:2] = b101;   
+              
+            default:
+            
+              p1seqbuilder.d[4:2] = b000;
+                      
+            }          
+                                                                                          
+        }
+      
+      //Increase the holder by 1 (which is equivalent to a spacing of 3 bits), rolling over if it exceeds
+      if (p1inputholder.q != b1001) {
+      
+        p1inputholder.d = p1inputholder.q + 1;
+        
+        } else {
+      
+        p1inputholder.d = b0000;
+        
+        }
+      
+      }
+
+    if (p2colours != 5b00000) {
+    
+      //Check the holder position, and insert in the appropriate position
+      
+      case (p2inputholder.q) {
+      
+        b0000:
+        
+          case (p2colours) {
+          
+            b00001:
+            
+              p2seqbuilder.d[31:29] = b001;
+              
+            b00010:
+            
+              p2seqbuilder.d[31:29] = b010;
+              
+            b00100:
+            
+              p2seqbuilder.d[31:29] = b011;
+              
+            b01000:
+            
+              p2seqbuilder.d[31:29] = b100;   
+              
+            b10000:
+            
+              p2seqbuilder.d[31:29] = b101;   
+              
+            default:
+            
+              p2seqbuilder.d[31:29] = b000;
+                      
+            }
+        
+        b0001:
+        
+          case (p2colours) {
+          
+            b00001:
+            
+              p2seqbuilder.d[28:26] = b001;
+              
+            b00010:
+            
+              p2seqbuilder.d[28:26] = b010;
+              
+            b00100:
+            
+              p2seqbuilder.d[28:26] = b011;
+              
+            b01000:
+            
+              p2seqbuilder.d[28:26] = b100;   
+              
+            b10000:
+            
+              p2seqbuilder.d[28:26] = b101;   
+              
+            default:
+            
+              p2seqbuilder.d[28:26] = b000;
+                      
+            }
+
+        b0010:
+        
+          case (p2colours) {
+          
+            b00001:
+            
+              p2seqbuilder.d[25:23] = b001;
+              
+            b00010:
+            
+              p2seqbuilder.d[25:23] = b010;
+              
+            b00100:
+            
+              p2seqbuilder.d[25:23] = b011;
+              
+            b01000:
+            
+              p2seqbuilder.d[25:23] = b100;   
+              
+            b10000:
+            
+              p2seqbuilder.d[25:23] = b101;   
+              
+            default:
+            
+              p2seqbuilder.d[25:23] = b000;
+                      
+            }
+
+        b0011:
+        
+          case (p2colours) {
+          
+            b00001:
+            
+              p2seqbuilder.d[22:20] = b001;
+              
+            b00010:
+            
+              p2seqbuilder.d[22:20] = b010;
+              
+            b00100:
+            
+              p2seqbuilder.d[22:20] = b011;
+              
+            b01000:
+            
+              p2seqbuilder.d[22:20] = b100;   
+              
+            b10000:
+            
+              p2seqbuilder.d[22:20] = b101;
+              
+            default:
+            
+              p2seqbuilder.d[22:20] = b000;
+                      
+            }          
+
+        b0100:
+        
+          case (p2colours) {
+          
+            b00001:
+            
+              p2seqbuilder.d[19:17] = b001;
+              
+            b00010:
+            
+              p2seqbuilder.d[19:17] = b010;
+              
+            b00100:
+            
+              p2seqbuilder.d[19:17] = b011;
+              
+            b01000:
+            
+              p2seqbuilder.d[19:17] = b100;   
+              
+            b10000:
+            
+              p2seqbuilder.d[19:17] = b101;   
+              
+            default:
+            
+              p2seqbuilder.d[19:17] = b000;
+                      
+            }          
+
+        b0101:
+        
+          case (p2colours) {
+          
+            b00001:
+            
+              p2seqbuilder.d[16:14] = b001;
+              
+            b00010:
+            
+              p2seqbuilder.d[16:14] = b010;
+              
+            b00100:
+            
+              p2seqbuilder.d[16:14] = b011;
+              
+            b01000:
+            
+              p2seqbuilder.d[16:14] = b100;   
+              
+            b10000:
+            
+              p2seqbuilder.d[16:14] = b101;   
+              
+            default:
+            
+              p2seqbuilder.d[16:14] = b000;
+                      
+            }          
+
+        b0110:
+        
+          case (p2colours) {
+          
+            b00001:
+            
+              p2seqbuilder.d[13:11] = b001;
+              
+            b00010:
+            
+              p2seqbuilder.d[13:11] = b010;
+              
+            b00100:
+            
+              p2seqbuilder.d[13:11] = b011;
+              
+            b01000:
+            
+              p2seqbuilder.d[13:11] = b100;   
+              
+            b10000:
+            
+              p2seqbuilder.d[13:11] = b101;   
+              
+            default:
+            
+              p2seqbuilder.d[13:11] = b000;
+                      
+            }
+          
+        b0111:
+        
+          case (p2colours) {
+          
+            b00001:
+            
+              p2seqbuilder.d[10:8] = b001;
+              
+            b00010:
+            
+              p2seqbuilder.d[10:8] = b010;
+              
+            b00100:
+            
+              p2seqbuilder.d[10:8] = b011;
+              
+            b01000:
+            
+              p2seqbuilder.d[10:8] = b100;   
+              
+            b10000:
+            
+              p2seqbuilder.d[10:8] = b101;   
+              
+            default:
+            
+              p2seqbuilder.d[10:8] = b000;
+                      
+            }                              
+
+        b1000:
+        
+          case (p2colours) {
+          
+            b00001:
+            
+              p2seqbuilder.d[7:5] = b001;
+              
+            b00010:
+            
+              p2seqbuilder.d[7:5] = b010;
+              
+            b00100:
+            
+              p2seqbuilder.d[7:5] = b011;
+              
+            b01000:
+            
+              p2seqbuilder.d[7:5] = b100;   
+              
+            b10000:
+            
+              p2seqbuilder.d[7:5] = b101;   
+              
+            default:
+            
+              p2seqbuilder.d[7:5] = b000;
+                      
+            }          
+
+        b1001:
+        
+          case (p2colours) {
+          
+            b00001:
+            
+              p2seqbuilder.d[4:2] = b001;
+              
+            b00010:
+            
+              p2seqbuilder.d[4:2] = b010;
+              
+            b00100:
+            
+              p2seqbuilder.d[4:2] = b011;
+              
+            b01000:
+            
+              p2seqbuilder.d[4:2] = b100;   
+              
+            b10000:
+            
+              p2seqbuilder.d[4:2] = b101;   
+              
+            default:
+            
+              p2seqbuilder.d[4:2] = b000;
+                      
+            }          
+                                                                                          
+        }
+      
+      //Increase the holder by 1 (which is equivalent to a spacing of 3 bits), rolling over if it exceeds
+      if (p2inputholder.q != b1001) {
+      
+        p2inputholder.d = p2inputholder.q + 1;
+        
+        } else {
+      
+        p2inputholder.d = b0000;
+        
+        }
+      
+      }    
+        
+    if (p1enter) {
+    
+      alufeed1 = p1seqbuilder.q[31:16];
+      alufeed2 = p1seqbuilder.q[15:0];
+      alufn = 6b000000;
+    
+      p1seq.d = aluoutput;
+      p1inputholder.d = 0;
+      p1seqbuilder.d = 0;
+      
+      }
+    
+    if (p2enter) {
+    
+      alufeed1 = p2seqbuilder.q[31:16];
+      alufeed2 = p2seqbuilder.q[15:0];
+      alufn = 6b000000;
+    
+      p2seq.d = aluoutput;
+      p2inputholder.d = 0;
+      p2seqbuilder.d = 0;
+            
+      }
+    
+    if (p1seq.q != 16h0000) {
+    
+      alufeed1 = correctseq;
+      alufeed2 = p1seq.q;
+      alufn = 6b110011;
+    
+      if (aluoutput == 16h0001) { // P1 won
+      
+        win.d = b01;
+        p1seq.d = 16h0000;
+        p1seqbuilder.d = 32h00000000;
+        p1inputholder.d = 4b0000;
+        p1wrong.d = 0;
+        p2seq.d = 16h0000;
+        p2seqbuilder.d = 32h00000000;
+        p2inputholder.d = 4b0000;
+        p2wrong.d = 0;
+        
+        } else {
+      
+        p1wrong.d = 1;
+        p1seq.d = 16h0000;
+        p1seqbuilder.d = 32h00000000;
+        p1inputholder.d = 4b0000;
+        
+        }
+      
+      }
+    
+    if (p2seq.q != 16h0000) {
+    
+      alufeed1 = correctseq;
+      alufeed2 = p2seq.q;
+      alufn = 6b110011;
+    
+      if (aluoutput == 16h0001) { // P2 won
+      
+        win.d = b10;
+        p1seq.d = 16h0000;
+        p1seqbuilder.d = 32h00000000;
+        p1inputholder.d = 4b0000;
+        p1wrong.d = 0;
+        p2seq.d = 16h0000;
+        p2seqbuilder.d = 32h00000000;
+        p2inputholder.d = 4b0000;
+        p2wrong.d = 0;        
+        
+        } else {
+      
+        p2wrong.d = 1;
+        p2seq.d = 16h0000;
+        p2seqbuilder.d = 32h00000000;
+        p1inputholder.d = 4b0000;
+        
+        }
+      
+      }
+
+    if (p1wrong.q && p2wrong.q) {
+    
+      win.d = b11; // neither player won
+      p1seq.d = 16h0000;
+      p1seqbuilder.d = 32h00000000;
+      p1inputholder.d = 4b0000;
+      p1wrong.d = 0;
+      p2seq.d = 16h0000;
+      p2seqbuilder.d = 32h00000000;
+      p2inputholder.d = 4b0000;
+      p2wrong.d = 0;
+      
+      }    
+     
+  }
+  
+}

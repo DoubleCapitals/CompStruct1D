@@ -1,0 +1,1505 @@
+module gamelogicv4 ( // Code is Unreadable
+    input clk,  // clock
+    input rst,  // reset
+    input roundno[3],
+    input reset,
+    input p1colours[5],
+    input p1enter,
+    input p2colours[5],
+    input p2enter,
+    output winner[2] // winner (to be fed back into roundmanager.luc)
+  ) {
+
+  .clk(clk), .rst(rst) {
+  
+    fsm p1 = {ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, WIN, FAIL};
+    fsm p2 = {ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, WIN, FAIL};
+    
+    }
+  
+  always {
+      
+    winner = 2b00; // initialise no winner 
+        
+    case (p1.q) { // For each player (the code is identical for both players's FSMs
+    
+      p1.ONE: // Current state represents position number in correct sequence
+      
+        case (roundno) { // checks the correct next button tp press based on the round number and state number
+        
+          3b000:
+          
+            if (p1colours[3]) { // if the correct button is pressed
+            
+              p1.d = p1.TWO; // Go into next state, or WIN state if the sequence is completed
+              
+              } else if (p1colours[0] || p1colours [1] || p1colours [2] || p1colours[4] || p1enter) { // if any other button is pressed
+            
+              p1.d = p1.FAIL; // Go into FAIL state
+              
+              } else { // If no button has been pressed yet
+            
+              p1.d = p1.ONE; // Remain in the current state
+              
+              }
+            
+          3b001:
+          
+            if (p1colours[2]) {
+            
+              p1.d = p1.TWO;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.ONE;
+              
+              }
+            
+          3b010:
+          
+            if (p1colours[0]) {
+            
+              p1.d = p1.TWO;
+              
+              } else if (p1colours[1] || p1colours[2] || p1colours[3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.ONE;
+              
+              }
+            
+          3b011:
+          
+            if (p1colours[2]) {
+            
+              p1.d = p1.TWO;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.ONE;
+              
+              }
+            
+          3b100:
+          
+            if (p1colours[4]) {
+            
+              p1.d = p1.TWO;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[2] || p1colours[3] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.ONE;
+              
+              }
+            
+          default:
+          
+            p1.d = p1.ONE;                                    
+          
+          }
+        
+      p1.TWO:
+      
+        case (roundno) {
+        
+          3b000:
+          
+            if (p1colours[1]) {
+            
+              p1.d = p1.THREE;
+              
+              } else if (p1colours[0] || p1colours [2] || p1colours [3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+             
+              p1.d = p1.TWO;
+              
+              }
+          
+          3b001:
+          
+            if (p1colours[3]) {
+            
+              p1.d = p1.THREE;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[2] || p1colours[4] ||p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.TWO;
+              
+              }
+            
+          3b010:
+          
+            if (p1colours[1]) {
+            
+              p1.d = p1.THREE;
+              
+              } else if (p1colours[0] || p1colours [2] || p1colours [3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+             
+              p1.d = p1.TWO;
+              
+              }
+            
+          3b011:
+          
+            if (p1colours[1]) {
+            
+              p1.d = p1.THREE;
+              
+              } else if (p1colours[0] || p1colours [2] || p1colours [3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+             
+              p1.d = p1.TWO;
+              
+              }
+            
+          3b100:
+          
+            if (p1colours[0]) {
+            
+              p1.d = p1.THREE;
+              
+              } else if (p1colours[1] || p1colours [2] || p1colours [3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+             
+              p1.d = p1.TWO;
+              
+              }                                    
+            
+          }
+        
+      p1.THREE:
+      
+        case (roundno) {
+        
+          3b000:
+          
+            if (p1colours[0]) {
+            
+              p1.d = p1.FOUR;
+              
+              } else if (p1colours[1] || p1colours[2] || p1colours[3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.THREE;
+              
+              }
+          
+          3b001:
+          
+            if (p1colours[1]) {
+            
+              p1.d = p1.FOUR;
+              
+              } else if (p1colours[0] || p1colours[2] || p1colours[3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.THREE;
+              
+              }
+            
+          3b010:
+          
+            if (p1colours[4]) {
+            
+              p1.d = p1.FOUR;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[2] || p1colours[3] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.THREE;
+              
+              }
+            
+          3b011:
+          
+            if (p1colours[4]) {
+            
+              p1.d = p1.FOUR;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[2] || p1colours[3] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.THREE;
+              
+              }
+            
+          3b100:
+          
+            if (p1colours[1]) {
+            
+              p1.d = p1.FOUR;
+              
+              } else if (p1colours[0] || p1colours[2] || p1colours[3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.THREE;
+              
+              }                                    
+            
+          }
+        
+      p1.FOUR:
+      
+        case (roundno) {
+        
+          3b000:
+          
+            if (p1colours[2]) {
+            
+              p1.d = p1.FIVE;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.FOUR;
+              
+              }
+          
+          3b001:
+          
+            if (p1colours[0]) {
+            
+              p1.d = p1.FIVE;
+              
+              } else if (p1colours[1] || p1colours[2] || p1colours[3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.FOUR;
+              
+              }
+            
+          3b010:
+          
+            if (p1colours[2]) {
+            
+              p1.d = p1.FIVE;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.FOUR;
+              
+              }
+            
+          3b011:
+          
+            if (p1colours[1]) {
+            
+              p1.d = p1.FIVE;
+              
+              } else if (p1colours[0] || p1colours[2] || p1colours[3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.FOUR;
+              
+              }
+            
+          3b100:
+          
+            if (p1colours[3]) {
+            
+              p1.d = p1.FIVE;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[2] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.FOUR;
+              
+              }                                    
+            
+          }
+        
+      p1.FIVE:
+      
+        case (roundno) {
+        
+          3b000:
+          
+            if (p1colours[4]) {
+            
+              p1.d = p1.SIX;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[2] || p1colours[3] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.FIVE;
+              
+              }
+            
+          3b001:
+          
+            if (p1colours[2]) {
+            
+              p1.d = p1.SIX;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.FIVE;
+              
+              }
+            
+          3b010:
+          
+            if (p1colours[3]) {
+            
+              p1.d = p1.SIX;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[2] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.FIVE;
+              
+              }
+            
+          3b011:
+          
+            if (p1colours[3]) {
+            
+              p1.d = p1.SIX;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[2] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.FIVE;
+              
+              }
+            
+          3b100:
+          
+            if (p1colours[2]) {
+            
+              p1.d = p1.SIX;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.FIVE;
+              
+              }                                                
+          
+          }
+        
+      p1.SIX:
+      
+        case (roundno) {
+        
+          3b000:
+          
+            if (p1colours[3]) {
+            
+              p1.d = p1.SEVEN;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[2] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.SIX;
+              
+              }
+            
+          3b001:
+          
+            if (p1colours[4]) {
+            
+              p1.d = p1.SEVEN;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[2] || p1colours[3] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.SIX;
+              
+              }
+            
+          3b010:
+          
+            if (p1colours[0]) {
+            
+              p1.d = p1.SEVEN;
+              
+              } else if (p1colours[1] || p1colours[2] || p1colours[3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.SIX;
+              
+              }
+            
+          3b011:
+          
+            if (p1colours[4]) {
+            
+              p1.d = p1.SEVEN;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[2] || p1colours[3] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.SIX;
+              
+              }
+            
+          3b100:
+          
+            if (p1colours[4]) {
+            
+              p1.d = p1.SEVEN;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[2] || p1colours[3] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.SIX;
+              
+              }                                                
+          
+          }
+        
+      p1.SEVEN:
+      
+        case (roundno) {
+        
+          3b000:
+          
+            if (p1enter) {
+            
+              p1.d = p1.WIN;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[2] || p1colours[3] || p1colours[4]) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.SEVEN;
+              
+              }
+            
+          3b001:
+          
+            if (p1enter) {
+            
+              p1.d = p1.WIN;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[2] || p1colours[3] || p1colours[4]) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.SEVEN;
+              
+              }
+            
+          3b010:
+          
+            if (p1colours[2]) {
+            
+              p1.d = p1.EIGHT;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.SEVEN;
+              
+              }
+            
+          3b011:
+          
+            if (p1colours[0]) {
+            
+              p1.d = p1.EIGHT;
+              
+              } else if (p1colours[1] || p1colours[2] || p1colours[3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.SEVEN;
+              
+              }
+            
+          3b100:
+          
+            if (p1colours[0]) {
+            
+              p1.d = p1.EIGHT;
+              
+              } else if (p1colours[1] || p1colours[2] || p1colours[3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.SEVEN;
+              
+              }                                                
+          
+          }
+        
+      p1.EIGHT:
+      
+        case (roundno) {
+        
+          3b010:
+          
+            if (p1enter) {
+            
+              p1.d = p1.WIN;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[2] || p1colours[3] || p1colours[4]) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.EIGHT;
+              
+              }
+            
+          3b011:
+          
+            if (p1colours[2]) {
+            
+              p1.d = p1.NINE;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.EIGHT;
+              
+              }
+            
+          3b100:
+          
+            if (p1colours[4]) {
+            
+              p1.d = p1.NINE;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[2] || p1colours[3] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.EIGHT;
+              
+              }                                    
+          
+          }
+        
+      p1.NINE:
+      
+        case (roundno) {
+        
+          3b011:
+          
+            if (p1enter) {
+            
+              p1.d = p1.WIN;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[2] || p1colours[3] || p1colours[4]) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.NINE;
+              
+              }
+            
+          3b100:
+          
+            if (p1colours[1]) {
+            
+              p1.d = p1.TEN;
+              
+              } else if (p1colours[0] || p1colours[2] || p1colours[3] || p1colours[4] || p1enter) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.NINE;
+              
+              }                        
+          
+          }
+        
+      p1.TEN:
+      
+        case (roundno) {
+        
+          3b100:
+          
+            if (p1enter) {
+            
+              p1.d = p1.WIN;
+              
+              } else if (p1colours[0] || p1colours[1] || p1colours[2] || p1colours[3] || p1colours[4]) {
+            
+              p1.d = p1.FAIL;
+              
+              } else {
+            
+              p1.d = p1.TEN;
+              
+              }            
+          
+          }  
+        
+      p1.WIN:
+      
+        p1.d = p1.WIN;
+        winner = 2b01; // Indicate to roundmanager that P1 won
+        
+      p1.FAIL:
+      
+        p1.d = p1.FAIL;
+          
+      }
+
+    case (p2.q) {
+    
+      p2.ONE:
+      
+        case (roundno) {
+        
+          3b000:
+          
+            if (p2colours[3]) {
+            
+              p2.d = p2.TWO;
+              
+              } else if (p2colours[0] || p2colours [1] || p2colours [2] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.ONE;
+              
+              }
+            
+          3b001:
+          
+            if (p2colours[2]) {
+            
+              p2.d = p2.TWO;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.ONE;
+              
+              }
+            
+          3b010:
+          
+            if (p2colours[0]) {
+            
+              p2.d = p2.TWO;
+              
+              } else if (p2colours[1] || p2colours[2] || p2colours[3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.ONE;
+              
+              }
+            
+          3b011:
+          
+            if (p2colours[2]) {
+            
+              p2.d = p2.TWO;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.ONE;
+              
+              }
+            
+          3b100:
+          
+            if (p2colours[4]) {
+            
+              p2.d = p2.TWO;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[2] || p2colours[3] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.ONE;
+              
+              }
+            
+          default:
+          
+            p2.d = p2.ONE;                                    
+          
+          }
+        
+      p2.TWO:
+      
+        case (roundno) {
+        
+          3b000:
+          
+            if (p2colours[1]) {
+            
+              p2.d = p2.THREE;
+              
+              } else if (p2colours[0] || p2colours [2] || p2colours [3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+             
+              p2.d = p2.TWO;
+              
+              }
+          
+          3b001:
+          
+            if (p2colours[3]) {
+            
+              p2.d = p2.THREE;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[2] || p2colours[4] ||p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.TWO;
+              
+              }
+            
+          3b010:
+          
+            if (p2colours[1]) {
+            
+              p2.d = p2.THREE;
+              
+              } else if (p2colours[0] || p2colours [2] || p2colours [3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+             
+              p2.d = p2.TWO;
+              
+              }
+            
+          3b011:
+          
+            if (p2colours[1]) {
+            
+              p2.d = p2.THREE;
+              
+              } else if (p2colours[0] || p2colours [2] || p2colours [3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+             
+              p2.d = p2.TWO;
+              
+              }
+            
+          3b100:
+          
+            if (p2colours[0]) {
+            
+              p2.d = p2.THREE;
+              
+              } else if (p2colours[1] || p2colours [2] || p2colours [3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+             
+              p2.d = p2.TWO;
+              
+              }                                    
+            
+          }
+        
+      p2.THREE:
+      
+        case (roundno) {
+        
+          3b000:
+          
+            if (p2colours[0]) {
+            
+              p2.d = p2.FOUR;
+              
+              } else if (p2colours[1] || p2colours[2] || p2colours[3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.THREE;
+              
+              }
+          
+          3b001:
+          
+            if (p2colours[1]) {
+            
+              p2.d = p2.FOUR;
+              
+              } else if (p2colours[0] || p2colours[2] || p2colours[3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.THREE;
+              
+              }
+            
+          3b010:
+          
+            if (p2colours[4]) {
+            
+              p2.d = p2.FOUR;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[2] || p2colours[3] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.THREE;
+              
+              }
+            
+          3b011:
+          
+            if (p2colours[4]) {
+            
+              p2.d = p2.FOUR;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[2] || p2colours[3] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.THREE;
+              
+              }
+            
+          3b100:
+          
+            if (p2colours[1]) {
+            
+              p2.d = p2.FOUR;
+              
+              } else if (p2colours[0] || p2colours[2] || p2colours[3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.THREE;
+              
+              }                                    
+            
+          }
+        
+      p2.FOUR:
+      
+        case (roundno) {
+        
+          3b000:
+          
+            if (p2colours[2]) {
+            
+              p2.d = p2.FIVE;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.FOUR;
+              
+              }
+          
+          3b001:
+          
+            if (p2colours[0]) {
+            
+              p2.d = p2.FIVE;
+              
+              } else if (p2colours[1] || p2colours[2] || p2colours[3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.FOUR;
+              
+              }
+            
+          3b010:
+          
+            if (p2colours[2]) {
+            
+              p2.d = p2.FIVE;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.FOUR;
+              
+              }
+            
+          3b011:
+          
+            if (p2colours[1]) {
+            
+              p2.d = p2.FIVE;
+              
+              } else if (p2colours[0] || p2colours[2] || p2colours[3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.FOUR;
+              
+              }
+            
+          3b100:
+          
+            if (p2colours[3]) {
+            
+              p2.d = p2.FIVE;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[2] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.FOUR;
+              
+              }                                    
+            
+          }
+        
+      p2.FIVE:
+      
+        case (roundno) {
+        
+          3b000:
+          
+            if (p2colours[4]) {
+            
+              p2.d = p2.SIX;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[2] || p2colours[3] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.FIVE;
+              
+              }
+            
+          3b001:
+          
+            if (p2colours[2]) {
+            
+              p2.d = p2.SIX;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.FIVE;
+              
+              }
+            
+          3b010:
+          
+            if (p2colours[3]) {
+            
+              p2.d = p2.SIX;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[2] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.FIVE;
+              
+              }
+            
+          3b011:
+          
+            if (p2colours[3]) {
+            
+              p2.d = p2.SIX;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[2] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.FIVE;
+              
+              }
+            
+          3b100:
+          
+            if (p2colours[2]) {
+            
+              p2.d = p2.SIX;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.FIVE;
+              
+              }                                                
+          
+          }
+        
+      p2.SIX:
+      
+        case (roundno) {
+        
+          3b000:
+          
+            if (p2colours[3]) {
+            
+              p2.d = p2.SEVEN;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[2] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.SIX;
+              
+              }
+            
+          3b001:
+          
+            if (p2colours[4]) {
+            
+              p2.d = p2.SEVEN;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[2] || p2colours[3] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.SIX;
+              
+              }
+            
+          3b010:
+          
+            if (p2colours[0]) {
+            
+              p2.d = p2.SEVEN;
+              
+              } else if (p2colours[1] || p2colours[2] || p2colours[3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.SIX;
+              
+              }
+            
+          3b011:
+          
+            if (p2colours[4]) {
+            
+              p2.d = p2.SEVEN;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[2] || p2colours[3] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.SIX;
+              
+              }
+            
+          3b100:
+          
+            if (p2colours[4]) {
+            
+              p2.d = p2.SEVEN;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[2] || p2colours[3] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.SIX;
+              
+              }                                                
+          
+          }
+        
+      p2.SEVEN:
+      
+        case (roundno) {
+        
+          3b000:
+          
+            if (p2enter) {
+            
+              p2.d = p2.WIN;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[2] || p2colours[3] || p2colours[4]) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.SEVEN;
+              
+              }
+            
+          3b001:
+          
+            if (p2enter) {
+            
+              p2.d = p2.WIN;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[2] || p2colours[3] || p2colours[4]) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.SEVEN;
+              
+              }
+            
+          3b010:
+          
+            if (p2colours[2]) {
+            
+              p2.d = p2.EIGHT;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.SEVEN;
+              
+              }
+            
+          3b011:
+          
+            if (p2colours[0]) {
+            
+              p2.d = p2.EIGHT;
+              
+              } else if (p2colours[1] || p2colours[2] || p2colours[3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.SEVEN;
+              
+              }
+            
+          3b100:
+          
+            if (p2colours[0]) {
+            
+              p2.d = p2.EIGHT;
+              
+              } else if (p2colours[1] || p2colours[2] || p2colours[3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.SEVEN;
+              
+              }                                                
+          
+          }
+        
+      p2.EIGHT:
+      
+        case (roundno) {
+        
+          3b010:
+          
+            if (p2enter) {
+            
+              p2.d = p2.WIN;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[2] || p2colours[3] || p2colours[4]) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.EIGHT;
+              
+              }
+            
+          3b011:
+          
+            if (p2colours[2]) {
+            
+              p2.d = p2.NINE;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.EIGHT;
+              
+              }
+            
+          3b100:
+          
+            if (p2colours[4]) {
+            
+              p2.d = p2.NINE;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[2] || p2colours[3] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.EIGHT;
+              
+              }                                    
+          
+          }
+        
+      p2.NINE:
+      
+        case (roundno) {
+        
+          3b011:
+          
+            if (p2enter) {
+            
+              p2.d = p2.WIN;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[2] || p2colours[3] || p2colours[4]) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.NINE;
+              
+              }
+            
+          3b100:
+          
+            if (p2colours[1]) {
+            
+              p2.d = p2.TEN;
+              
+              } else if (p2colours[0] || p2colours[2] || p2colours[3] || p2colours[4] || p2enter) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.NINE;
+              
+              }                        
+          
+          }
+        
+      p2.TEN:
+      
+        case (roundno) {
+        
+          3b100:
+          
+            if (p2enter) {
+            
+              p2.d = p2.WIN;
+              
+              } else if (p2colours[0] || p2colours[1] || p2colours[2] || p2colours[3] || p2colours[4]) {
+            
+              p2.d = p2.FAIL;
+              
+              } else {
+            
+              p2.d = p2.TEN;
+              
+              }            
+          
+          }  
+        
+      p2.WIN:
+      
+        p2.d = p2.WIN;
+        winner = 2b10; // indicate to roundmanager that P2 won
+        
+      p2.FAIL:
+      
+        p2.d = p2.FAIL;
+          
+      }        
+        
+    if (reset) { // If reset, bring both players to first state (to prevent accidental input before the sequence is displayed)
+    
+      p1.d = p1.ONE;
+      p2.d = p2.ONE;
+      
+      }
+    
+    if (p1.q == p1.FAIL && p2.q == p2.FAIL) { // If both players are in fail state
+    
+      winner = 2b11; // Indicate that there is no winner
+      
+      }
+    
+  }
+    
+}

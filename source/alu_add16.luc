@@ -1,0 +1,38 @@
+module alu_add16 (
+    input a[16],
+    input b[16],
+    input alufn[6],
+    output sum[16],
+    output z,
+    output v,
+    output n
+  ) {
+  
+  sig xb[16]; // signal to store B, or B's inverse (for subtraction)
+  sig sum1[16]; // signal to store sum of operation (for computation of z, v and n)
+
+  always {
+    z = 0; // initialisation
+    v = 0;
+    n = 0;
+    sum = a;
+  
+    if (alufn[1:0] == b10) {
+    
+      sum = a * b; // Multiplication
+          
+      } else {
+    
+      // following Lab 3, use XOR gate to take inverse of b if alufn[0] = 1 (subtraction operation)
+      // otherwise xb = b
+      xb = b^16x{alufn[0]};
+      sum1 = a + xb + alufn[0]; // add 1 to inverse of b to make 2's complement if needed, then performs A+B or A+(-B)
+      sum = sum1; // store the sum
+      
+      z = (sum1 == 16x{0}); // z = 1 if sum = 0
+      v = (a[15] & xb[15] & !sum1[15]) || (!a[15] & !xb[15] & sum1[15]); // v = 0 if operation overflows
+      n = sum1[15]; // n = 0 if sum is negative (ie. MSB of sum is 1)
+      
+      }   
+  }
+}

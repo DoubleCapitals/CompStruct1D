@@ -1,0 +1,543 @@
+module roundmanager (
+    input clk,  // clock
+    input rst,  // reset
+    input p1colours[5],
+    input p1enter,
+    input p2colours[5],
+    input p2enter,
+    output p1indicator[3],
+    output p2indicator[3],
+    output roundlights[5]
+    
+  ) {
+
+  alu alu;
+  
+  .clk(clk), .rst(rst) { // registers and game handling FSM
+  
+    dff roundno[3];
+    dff p1score[2];
+    dff p2score[2];
+    dff winner[2];
+    dff p1ready;
+    dff p2ready;
+    dff clock[32];
+  
+    fsm rounder = {IDLE, COUNTDOWN, DISONE, PLAYONE, DISTWO, PLAYTWO, DISTHREE, PLAYTHREE, DISFOUR, PLAYFOUR, DISFIVE, PLAYFIVE, SCORE, GAMEOVER};
+    
+    gamelogicv4 glv4; // import game logic
+    
+    }
+  
+  always {
+  
+    alu.spoiler = 0;
+    p1indicator = 3b000;
+    p2indicator = 3b000;
+    roundlights = 5b00000;
+    alu.alufn = 6b000000;
+    alu.a = 16h0000;
+    alu.b = 16h0000;
+    clock.d = clock.q + 1; // clock that increment by one every cycle
+    glv4.p1colours = p1colours; // connect to game logic v4 module + initialisation
+    glv4.p1enter = p1enter;
+    glv4.p2colours = p2colours;
+    glv4.p2enter = p2enter;
+    glv4.reset = 1; // reset defaults to 1 to prevent premature button presses before game begins
+    glv4.roundno = 3b111;
+       
+    if (rounder.q != rounder.IDLE && rounder.q != rounder.COUNTDOWN) { // displays scores of both players when not in IDLE or COUNTDOWN state
+    
+      case (p1score.q) {
+      
+        b00:
+        
+          p1indicator = b000;
+          
+        b01:
+        
+          p1indicator = b001;
+          
+        b10:
+        
+          p1indicator = b011;    
+        
+        b11:
+        
+          p1indicator = b111;  
+          
+        }
+      
+      case (p2score.q) {
+      
+        b00:
+        
+          p2indicator = b000;
+          
+        b01:
+        
+          p2indicator = b001;  
+        
+        b10:
+        
+          p2indicator = b011;
+          
+        b11:
+        
+          p2indicator = b111;          
+        
+        }
+      
+      }
+    
+    case (rounder.q) {
+    
+      rounder.IDLE: // Idle state, before new game begins
+      
+        if (p1enter) { // Logic that checks that both enter buttons are pressed before starting the game
+        
+          p1ready.d = 1;
+          
+          }
+        
+        if (p2enter) {
+        
+          p2ready.d = 1;
+          
+          }
+        
+        alu.alufn = 6b011000; // ALU "AND" function
+        
+        alu.a = c{15h0000, p1ready.q};
+        
+        alu.b = c{15h0000, p2ready.q};
+        
+        if (alu.alu == 16h0001) { // Starts the game when output is 16h0001 (both enter butttons pressed)
+        
+          clock.d = 0;
+          p1ready.d = 0;
+          p2ready.d = 0;
+          rounder.d = rounder.COUNTDOWN;
+          
+          }
+    
+      rounder.COUNTDOWN:
+      
+        if (clock.q <= 32h04000000) { // Countdown from 3, sequentially counts down player lights, while game lights flashes
+        
+          p1indicator = b111;
+          p2indicator = b111;
+          
+          if (clock.q <= 32h02000000) {
+          
+            roundlights = b11111;
+          
+            }
+          
+          } else if (clock.q <= 32h08000000) {
+        
+          p1indicator = b011;
+          p2indicator = b011;
+          
+          if (clock.q <= 32h06000000) {
+          
+            roundlights = b11111;
+            
+            }  
+          
+          } else if (clock.q <= 32h0c000000) {
+        
+          p1indicator = b001;
+          p2indicator = b001;
+          
+          if (clock.q <= 32h0a000000) {
+          
+            roundlights = b11111;
+            
+            }
+          
+          } else {
+          
+            case (roundno.q) { // otherwise, check the round number and display the sequence of the appropriate round
+            
+              b000:
+              
+                rounder.d = rounder.DISONE;
+                clock.d = 0;
+                
+              b001:
+              
+                rounder.d = rounder.DISTWO;
+                clock.d = 0;
+              
+              b010:
+              
+                rounder.d = rounder.DISTHREE;
+                clock.d = 0;  
+              
+              b011:
+                
+                rounder.d = rounder.DISFOUR;
+                clock.d = 0;
+              
+              b100:
+              
+                rounder.d = rounder.DISFIVE;
+                clock.d = 0;
+                        
+              default:
+              
+                rounder.d = rounder.GAMEOVER;
+                clock.d = 0;
+            
+            }      
+          
+          }
+      
+      rounder.DISONE:
+        
+        if (clock.q <= 32h04000000) { // for a certain period of time (adjustable according to difficulty)
+        
+          roundlights = b01000; // display sequence of lights
+          
+          } else if (clock.q <= 32h08000000) {
+        
+          roundlights = b00010; 
+          
+          } else if (clock.q <= 32h0c000000) {
+        
+          roundlights = b00001;
+          
+          } else if (clock.q <= 32h10000000) {
+        
+          roundlights = b00100;
+          
+          } else if (clock.q <= 32h14000000) {
+        
+          roundlights = b10000;
+          
+          } else if (clock.q <= 32h18000000) {
+        
+          roundlights = b01000;
+          
+          } else { // once all the lights are shown
+        
+          clock.d = 0; // reset the clock
+          rounder.d = rounder.PLAYONE; // changes the state to let people input
+          
+          }
+       
+      rounder.PLAYONE:
+      
+        glv4.roundno = 3b000; // give the round number to the game logic
+        glv4.reset = 0; // enable user inputs
+        if (glv4.winner != 2b00) { // retrieve winner, and update scores
+        
+          winner.d = glv4.winner;
+          clock.d = 0;
+          rounder.d = rounder.SCORE;
+          
+          }           
+        
+      rounder.DISTWO:
+        
+        if (clock.q <= 32h04000000) { // for a certain period of time (adjustable according to difficulty)
+        
+          roundlights = b00100; // display sequence of lights
+          
+          } else if (clock.q <= 32h08000000) {
+        
+          roundlights = b01000;
+          
+          } else if (clock.q <= 32h0c000000) {
+        
+          roundlights = b00010;
+          
+          } else if (clock.q <= 32h10000000) {
+        
+          roundlights = b00001;
+          
+          } else if (clock.q <= 32h14000000) {
+        
+          roundlights = b00100;
+          
+          } else if (clock.q <= 32h18000000) {
+        
+          roundlights = b10000;
+          
+          } else { // once all the lights are shown
+        
+          clock.d = 0; // reset the clock
+          rounder.d = rounder.PLAYTWO; // changes the state to let people input
+          
+          }
+       
+      rounder.PLAYTWO:
+      
+        glv4.roundno = 3b001; // give the round number to the game logic
+        glv4.reset = 0; // enable user inputs
+        if (glv4.winner != 2b00) { // retrieve winner, and update scores
+        
+          winner.d = glv4.winner;
+          clock.d = 0;
+          rounder.d = rounder.SCORE;
+          
+          }
+        
+        rounder.DISTHREE:
+        
+        if (clock.q <= 32h04000000) { // for a certain period of time (adjustable according to difficulty)
+        
+          roundlights = b00001; // display sequence of lights
+          
+          } else if (clock.q <= 32h08000000) {
+        
+          roundlights = b00010;
+          
+          } else if (clock.q <= 32h0c000000) {
+        
+          roundlights = b10000;
+          
+          } else if (clock.q <= 32h10000000) {
+        
+          roundlights = b00100;
+          
+          } else if (clock.q <= 32h14000000) {
+        
+          roundlights = b01000;
+          
+          } else if (clock.q <= 32h18000000) {
+        
+          roundlights = b00001;
+          
+          } else if (clock.q <= 32h1c000000) {
+        
+          roundlights = b00100;
+          
+          } else { // once all the lights are shown
+        
+          clock.d = 0; // reset the clock
+          rounder.d = rounder.PLAYTHREE; // changes the state to let people input
+          
+          }
+       
+      rounder.PLAYTHREE:
+      
+        glv4.roundno = 3b010; // give the round number to the game logic
+        glv4.reset = 0; // enable user inputs
+        if (glv4.winner != 2b00) { // retrieve winner, and update scores
+        
+          winner.d = glv4.winner;
+          clock.d = 0;
+          rounder.d = rounder.SCORE;
+          
+          }
+        
+        rounder.DISFOUR:
+        
+        if (clock.q <= 32h04000000) { // for a certain period of time (adjustable according to difficulty)
+        
+          roundlights = b00100; // display sequence of lights
+          
+          } else if (clock.q <= 32h08000000) {
+        
+          roundlights = b00010;
+          
+          } else if (clock.q <= 32h0c000000) {
+        
+          roundlights = b10000;
+          
+          } else if (clock.q <= 32h10000000) {
+        
+          roundlights = b00010;
+          
+          } else if (clock.q <= 32h14000000) {
+        
+          roundlights = b01000;
+          
+          } else if (clock.q <= 32h18000000) {
+        
+          roundlights = b10000;
+          
+          } else if (clock.q <= 32h1c000000) {
+        
+          roundlights = b00001;
+          
+          } else if (clock.q <= 32h20000000) {
+        
+          roundlights = b00100;
+          
+          } else { // once all the lights are shown
+        
+          clock.d = 0; // reset the clock
+          rounder.d = rounder.PLAYFOUR; // changes the state to let people input
+          
+          }
+       
+      rounder.PLAYFOUR:
+      
+        glv4.roundno = 3b011; // give the round number to the game logic
+        glv4.reset = 0; // enable user inputs
+        if (glv4.winner != 2b00) { // retrieve winner, and update scores
+        
+          winner.d = glv4.winner;
+          clock.d = 0;
+          rounder.d = rounder.SCORE;
+          
+          }
+        
+      rounder.DISFIVE:
+        
+        if (clock.q <= 32h04000000) { // for a certain period of time (adjustable according to difficulty)
+        
+          roundlights = b10000; // display sequence of lights
+          
+          } else if (clock.q <= 32h08000000) {
+        
+          roundlights = b00001;
+          
+          } else if (clock.q <= 32h0c000000) {
+        
+          roundlights = b00010;
+          
+          } else if (clock.q <= 32h10000000) {
+        
+          roundlights = b01000;
+          
+          } else if (clock.q <= 32h14000000) {
+        
+          roundlights = b00100;
+          
+          } else if (clock.q <= 32h18000000) {
+        
+          roundlights = b10000;
+          
+          } else if (clock.q <= 32h1c000000) {
+        
+          roundlights = b00001;
+          
+          } else if (clock.q <= 32h20000000) {
+        
+          roundlights = b10000;
+          
+          } else if (clock.q <= 32h24000000) {
+        
+          roundlights = b00010;
+          
+          } else { // once all the lights are shown
+        
+          clock.d = 0; // reset the clock
+          rounder.d = rounder.PLAYFIVE; // changes the state to let people input
+          
+          }
+       
+      rounder.PLAYFIVE:
+      
+        glv4.roundno = 3b100; // give the round number to the game logic
+        glv4.reset = 0; // enable user inputs
+        if (glv4.winner != 2b00) { // retrieve winner, and update scores
+        
+          winner.d = glv4.winner;
+          clock.d = 0;
+          rounder.d = rounder.SCORE;
+          
+          }
+        
+      rounder.SCORE:
+      
+        if (clock.q == 32h0c000000) { // display the old score first, then after a certain time
+        
+          if (winner.q == b01) {
+          
+            roundno.d = roundno.q + 1; // if there's a winner, update the round number
+            alu.a = c{14h0000, p1score.q}; // if p1 won, add 1 to p1's score
+            alu.b = 16h0001;
+            alu.alufn = 6b000000; // ALU "ADD" function
+            p1score.d = alu.alu[1:0]; // ALU's output updates score
+            
+            } else if (winner.q == b10) {
+          
+            roundno.d = roundno.q + 1; // if there's a winner, update the round number
+            alu.a = c{14h0000, p2score.q}; // if p1 won, add 1 to p1's score
+            alu.b = 16h0001;
+            alu.alufn = 6b000000; // ALU "ADD" function
+            p2score.d = alu.alu[1:0]; // ALU's output updates score            
+            
+            }
+          
+          }
+        
+        if (clock.q == 32h18000000) { // After another period of time
+        
+          alu.a = c{14h0000, p1score.q}; // Compare p1's score with 3
+          alu.b = 16h0003;
+          alu.alufn = 6b110101; // ALU "CMPLT" function
+          
+          if (alu.alu == 16b0000) {
+          
+            rounder.d = rounder.GAMEOVER; // End game if p1score is not < 3
+            winner.d = 0;
+            clock.d = 0;
+            
+            }
+          
+          }
+        
+        if (clock.q == 32h18000001) { // After another period of time
+        
+          alu.a = c{14h0000, p2score.q}; // Compare p2's score with 3
+          alu.b = 16h0003;
+          alu.alufn = 6b110101; // ALU "CMPLT" function
+          
+          if (alu.alu == 16b0000) {
+          
+            rounder.d = rounder.GAMEOVER; // End game if p2score is not < 3
+            winner.d = 0;
+            clock.d = 0;
+            
+            } else {
+          
+            rounder.d = rounder.COUNTDOWN; // otherwise, start the countdown for the next round
+            winner.d = 0;
+            clock.d = 0;
+            
+            }
+          
+          }          
+        
+      rounder.GAMEOVER:
+      
+        roundlights = b11111; // All game lights light up to indicate end of game
+      
+        if (p1enter) { // Same as IDLE state; both players press the enter button to go back to IDLE state
+        
+          p1ready.d = 1;
+          
+          }
+        
+        if (p2enter) {
+        
+          p2ready.d = 1;
+          
+          }
+        
+        alu.alufn = 6b011000; // ALU "AND" function
+        
+        alu.a = c{15h0000, p1ready.q};
+        
+        alu.b = c{15h0000, p2ready.q};
+        
+        if (alu.alu == 16h0001) {
+        
+          clock.d = 0; // reset parameters
+          p1ready.d = 0;
+          p2ready.d = 0;
+          p1score.d = 0;
+          p2score.d = 0;
+          roundno.d = 0;
+          rounder.d = rounder.IDLE;
+          
+          }        
+      }
+  }
+}
