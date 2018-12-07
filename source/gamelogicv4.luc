@@ -1,4 +1,4 @@
-module gamelogicv4 ( // Code is Unreadable
+module gamelogicv4 (
     input clk,  // clock
     input rst,  // reset
     input roundno[3],
