@@ -1,4 +1,4 @@
-module gamelogicv3 ( // Hashing Harmony
+module gamelogicv3 (
     input clk,  // clock
     input rst,  // reset
     input p1colours[5],
